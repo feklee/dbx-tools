@@ -1,12 +1,20 @@
 #!/bin/bash
 
-source $(dirname $0)/init.sh
+source "`dirname $0`/init.sh"
 
-dbx-check-if-exists
+# Unlikely, but who knows...:
+if test "$DBX_HOME" = /; then
+    echo "$PWD"
+    exit
+fi
 
-dbx-exit-on-error
+DBX_PWD=${PWD##$DBX_HOME}
+test "$DBX_PWD" = "$PWD" && \
+    dbx-exit-on-error "Current directory not in \$DBX_HOME (\`$DBX_HOME')"
 
-cd "$DBX_HOME" # check using sth. like `dbx-check`
-# TODO: Check if $1 exists on Dropbox, maybe using a `dbx_check_existence`
-mkdir -p "$1"
-cd "$1"
+if test -z "$DBX_PWD"; then
+    echo "/"
+    exit
+fi
+
+echo "$DBX_PWD"

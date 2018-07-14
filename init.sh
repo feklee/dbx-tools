@@ -20,6 +20,7 @@ function dbx-exit-on-usage {
     exit 1
 }
 
+# TODO: Check installation of dbxcli
 realpath -m /dbx-nothing >/dev/null 2>&1 && \
     realpath -e / >/dev/null 2>&1 || \
     dbx-exit-on-error "Installed \`realpath' does not support required options \`-m' and \`-e'.

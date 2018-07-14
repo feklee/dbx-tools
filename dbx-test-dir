@@ -2,7 +2,7 @@
 
 source "`dirname $0`/init.sh"
 
-ARGS=path
+ARGS=PATH
 DESCRIPTION="Returns success if the path exists in the Dropbox."
 
 test -z "$1" && dbx-exit-on-usage "$ARGS" "$DESCRIPTION"

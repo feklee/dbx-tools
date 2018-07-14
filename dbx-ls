@@ -1,1 +1,24 @@
-calculate from local path
+#!/bin/bash
+
+source "`dirname $0`/init.sh"
+
+# TODO: add options -h and -l (add -h also to other commands)
+
+ARGS="[PATH]"
+DESCRIPTION=$(cat <<EOF
+Lists the contents of the current, or - if specified - the directory
+at path on the Dropbox. The specified path may be relative.
+EOF
+	   )
+
+test -z "$1" && dbx-exit-on-usage "$ARGS" "$DESCRIPTION"
+
+DBX_PWD=`dbx-pwd 2>/dev/null` || DBX_PWD=""
+FULL_PATH=`realpath -m "$DBX_PWD/$1"`
+dbx-test-dir "$FULL_PATH"
+
+LOCAL_PATH="$DBX_HOME$FULL_PATH"
+mkdir -p "$LOCAL_PATH" || \
+    dbx-exit-on-error "Cannot create directory: $FULL_PATH"
+
+echo "$LOCAL_PATH"

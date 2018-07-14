@@ -5,13 +5,15 @@ source "`dirname $0`/init.sh"
 ARGS=path
 DESCRIPTION=$(cat <<EOF
 If not existing, creates a local directory corresponding to the
-path on Dropbox, relative to the current location. Enters that directory.
+path on Dropbox, relative to the current location. Outputs that
+directory.
 EOF
 	   )
 
 test -z "$1" && dbx-exit-on-usage "$ARGS" "$DESCRIPTION"
 
-FULL_PATH=`realpath -m "/$1"`
+DBX_PWD=`dbx-pwd 2>/dev/null` || DBX_PWD=""
+FULL_PATH=`realpath -m "$DBX_PWD/$1"`
 dbx-test-dir "$FULL_PATH"
 
 LOCAL_PATH="$DBX_HOME$FULL_PATH"

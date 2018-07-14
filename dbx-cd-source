@@ -1,11 +1,8 @@
 #!/bin/bash
 
 function dbx-cd {
-    if test -z "$1"; then
-	echo "Usage: dbx-cd path" >&2
-	return
-    fi
-    OUT=`dbx-make-local-dir "$1"` && \
+    test -z "$1" && RELATIVE_PATH="/" || RELATIVE_PATH="$1"
+    OUT=`dbx-make-local-dir "$RELATIVE_PATH"` && \
 	cd "$OUT" || \
 	    echo "$OUT" >&2
 }

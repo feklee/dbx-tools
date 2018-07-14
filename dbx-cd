@@ -2,11 +2,18 @@
 
 source "`dirname $0`/init.sh"
 
-dbx-check-if-exists
+ARGS=path
+DESCRIPTION="If not existing, creates a local directory corresponding to the path.
+Enters that directory."
 
-dbx-exit-on-error
+test -z "$1" && dbx-exit-on-usage "$ARGS" "$DESCRIPTION"
 
-cd "$DBX_HOME" # check using sth. like `dbx-check`
-# TODO: Check if $1 exists on Dropbox, maybe using a `dbx_check_existence`
-mkdir -p "$1"
-cd "$1"
+FULL_PATH=`realpath -m "/$1"`
+dbx-test-dir "$FULL_PATH"
+
+LOCAL_PATH="DBX_HOME$FULL_PATH"
+mkdir -p "$LOCAL_PATH" || \
+    dbx-exit-on-error "Cannot create directory: $FULL_PATH"
+
+cd "$LOCAL_PATH" || \
+    dbx-exit-on-error "Cannot enter directory: $FULL_PATH"

@@ -12,8 +12,8 @@ DIRNAME=`dirname "$FULL_PATH"`
 
 test "$FULL_PATH" = "/" && exit 0
 
-LISTING=`dbxcli ls -l "$DIRNAME" 2>/dev/null` || \
-    dbx-exit-on-error "Not found: $FULL_PATH"
+LISTING=`dbxcli ls -l "$DIRNAME"` || \
+    dbx-exit-on-error "Cannot access: $DIRNAME"
 
 echo "$LISTING" | \
     grep -qE "^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+$FULL_PATH[[:blank:]]+\$" && \

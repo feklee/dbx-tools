@@ -11,4 +11,8 @@ function dbx-cd {
 }
 
 test "$0" = "$BASH_SOURCE" && \
-    echo "Source this script to get \`dbx-cd'."
+    cat <<EOF
+Source this script to get \`dbx-cd':
+
+source "$0"
+EOF

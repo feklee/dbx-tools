@@ -1,0 +1,12 @@
+#!/bin/bash
+
+source $(dirname $0)/util.sh
+
+dbx-check-if-exists
+
+dbx-exit-on-error
+
+cd "$DBX_HOME" # check using sth. like `dbx-check`
+# TODO: Check if $1 exists on Dropbox, maybe using a `dbx_check_existence`
+mkdir -p "$1"
+cd "$1"

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+source $(dirname $0)/init.sh
+
+test -z "$1" && dbx-print-usage "path"
+
+realpath -m "$DBX_PWD/$1"
+

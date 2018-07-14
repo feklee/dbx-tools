@@ -1,0 +1,16 @@
+#!/bin/bash
+
+source $(dirname $0)/init.sh
+
+# TODO: First cd into directory, but don’t go outside? Or really build path.
+
+test -z "$1" && dbx-exit-on-error "No path specified"
+                                
+P="$1"
+
+LISTING=`dbxcli ls -l "$P" | head  2>/dev/null` || dbx-exit-on-error "Not found: $P"
+
+
+# TODO: Display description w/o args
+
+# dbx-ls "$1" || exit-on-error "Path does not exist: $1"

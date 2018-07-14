@@ -3,20 +3,20 @@
 source "`dirname $0`/init.sh"
 
 ARGS=PATH
-DESCRIPTION="Returns success if the path exists in the Dropbox."
+DESCRIPTION="Returns success if the path exists in the Dropbox and is a directory."
 
 test -z "$1" && dbx-exit-on-usage "$ARGS" "$DESCRIPTION"
 
-FULL_PATH=`realpath -m "/$1"`
-DIRNAME=`dirname "$FULL_PATH"`
+ABSOLUTE_PATH=`realpath -m "/$1"`
+DIRNAME=`dirname "$ABSOLUTE_PATH"`
 
-test "$FULL_PATH" = "/" && exit 0
+test "$ABSOLUTE_PATH" = "/" && exit 0
 
 LISTING=`dbxcli ls -l "$DIRNAME"` || \
     dbx-exit-on-error "Cannot access: $DIRNAME"
 
 echo "$LISTING" | \
-    grep -qE "^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+$FULL_PATH[[:blank:]]+\$" && \
+    grep -qE "^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+$ABSOLUTE_PATH[[:blank:]]+\$" && \
     exit 0
 
-dbx-exit-on-error "Not a Dropbox directory: $FULL_PATH"
+dbx-exit-on-error "Not a Dropbox directory: $ABSOLUTE_PATH"

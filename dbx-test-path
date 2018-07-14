@@ -1,0 +1,13 @@
+#!/bin/bash
+
+source "`dirname $0`/init.sh"
+
+ARGS=PATH
+DESCRIPTION="Returns success if the path exists in the Dropbox."
+
+test -z "$1" && dbx-exit-on-usage "$ARGS" "$DESCRIPTION"
+
+ABSOLUTE_PATH=`realpath -m "/$1"`
+
+LISTING=`dbxcli ls "$ABSOLUTE_PATH"` || \
+    dbx-exit-on-error "Cannot access on Dropbox: $ABSOLUTE_PATH"

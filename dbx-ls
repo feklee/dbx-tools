@@ -6,19 +6,11 @@ source "`dirname $0`/init.sh"
 
 ARGS="[PATH]"
 DESCRIPTION=$(cat <<EOF
-Lists the contents of the current, or - if specified - the directory
-at path on the Dropbox. The specified path may be relative.
+Lists information about the current Dropbox directory, or if
+specified, about PATH.
 EOF
 	   )
 
-test -z "$1" && dbx-exit-on-usage "$ARGS" "$DESCRIPTION"
-
-DBX_PWD=`dbx-pwd 2>/dev/null` || DBX_PWD=""
-FULL_PATH=`realpath -m "$DBX_PWD/$1"`
-dbx-test-dir "$FULL_PATH"
-
-LOCAL_PATH="$DBX_HOME$FULL_PATH"
-mkdir -p "$LOCAL_PATH" || \
-    dbx-exit-on-error "Cannot create directory: $FULL_PATH"
-
-echo "$LOCAL_PATH"
+DBX_PATH=`dbx-path "$1"` || exit
+dbxcli ls "$DBX_PATH"
+echo # dbxcli `ls' ommits line break

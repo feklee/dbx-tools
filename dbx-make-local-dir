@@ -2,7 +2,7 @@
 
 source "`dirname $0`/init.sh"
 
-ARGS=path
+ARGS=PATH
 DESCRIPTION=$(cat <<EOF
 If not existing, creates a local directory corresponding to the
 path on Dropbox, relative to the current location. Outputs that
@@ -12,12 +12,11 @@ EOF
 
 test -z "$1" && dbx-exit-on-usage "$ARGS" "$DESCRIPTION"
 
-DBX_PWD=`dbx-pwd 2>/dev/null` || DBX_PWD=""
-FULL_PATH=`realpath -m "$DBX_PWD/$1"`
-dbx-test-dir "$FULL_PATH"
+DBX_PATH=`dbx-path "$1"` || exit
+dbx-test-dir "$DBX_PATH" || exit
 
-LOCAL_PATH="$DBX_HOME$FULL_PATH"
+LOCAL_PATH="$DBX_HOME$DBX_PATH"
 mkdir -p "$LOCAL_PATH" || \
-    dbx-exit-on-error "Cannot create directory: $FULL_PATH"
+    dbx-exit-on-error "Cannot create local directory: $LOCAL_PATH"
 
 echo "$LOCAL_PATH"

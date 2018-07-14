@@ -1,0 +1,14 @@
+#!/bin/bash
+
+function dbx-cd {
+    if test -z "$1"; then
+	echo "Usage: dbx-cd path" >&2
+	return
+    fi
+    OUT=`dbx-make-local-dir "$1"` && \
+	cd "$OUT" || \
+	    echo "$OUT" >&2
+}
+
+test "$0" = "$BASH_SOURCE" && \
+    echo "Source this script to get \`dbx-cd'."

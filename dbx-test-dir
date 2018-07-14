@@ -19,4 +19,4 @@ echo "$LISTING" | \
     grep -qE "^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+$FULL_PATH[[:blank:]]+\$" && \
     exit 0
 
-dbx-exit-on-error "Not a directory: $FULL_PATH"
+dbx-exit-on-error "Not a Dropbox directory: $FULL_PATH"

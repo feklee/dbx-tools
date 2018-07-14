@@ -1,7 +1,9 @@
-# TODO: check that realpath supports the -m option (Gnu realpath does)
+set -e
 
 function dbx-print-usage {
-    echo "Usage: $0 $1"
+    echo "Usage: `basename $0` $1"
+    test -n "$2" && echo "
+$2"
 }
 
 function dbx-test-absolute {
@@ -14,7 +16,7 @@ function dbx-exit-on-error {
 }
 
 function dbx-exit-on-usage {
-    dbx-print-usage "$1"
+    dbx-print-usage "$1" "$2"
     exit 1
 }
 

@@ -1,16 +1,22 @@
 #!/bin/bash
 
-source $(dirname $0)/init.sh
+source "`dirname $0`/init.sh"
 
-# TODO: First cd into directory, but don’t go outside? Or really build path.
+ARGS=path
+DESCRIPTION="Returns success if the path exists in the Dropbox."
 
-test -z "$1" && dbx-exit-on-error "No path specified"
-                                
-P="$1"
+test -z "$1" && dbx-exit-on-usage "$ARGS" "$DESCRIPTION"
 
-LISTING=`dbxcli ls -l "$P" | head  2>/dev/null` || dbx-exit-on-error "Not found: $P"
+FULL_PATH=`realpath -m "/$1"`
+DIRNAME=`dirname "$FULL_PATH"`
 
+test "$FULL_PATH" = "/" && exit 0
 
-# TODO: Display description w/o args
+LISTING=`dbxcli ls -l "$DIRNAME" 2>/dev/null` || \
+    dbx-exit-on-error "Not found: $FULL_PATH"
 
-# dbx-ls "$1" || exit-on-error "Path does not exist: $1"
+echo "$LISTING" | \
+    grep -qE "^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+$FULL_PATH[[:blank:]]+\$" && \
+    exit 0
+
+dbx-exit-on-error "Not a directory: $FULL_PATH"

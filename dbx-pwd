@@ -2,6 +2,8 @@
 
 source "`dirname $0`/init.sh"
 
+parse_options "$@"
+
 # Unlikely, but who knows...:
 if test "$DBX_HOME" = /; then
     echo "$PWD"

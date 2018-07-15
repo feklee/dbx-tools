@@ -2,15 +2,24 @@
 
 source "`dirname $0`/init.sh"
 
-# TODO: add options -h and -l (add -h also to other commands)
+OPTIONS[l]="detailed listing"
+OPTIONS[R]="recursive listing"
 
-ARGS="[PATH]"
+NON_OPTION_ARGS="[PATH]"
+
 DESCRIPTION=$(cat <<EOF
-Lists information about the current Dropbox directory, or if
+List information about the current Dropbox directory, or if
 specified, about PATH.
 EOF
 	   )
 
+parse_options "$@"
+echo $ENABLED_OPTIONS
+test_option_enabled l && echo "l is enabled"
+exit
+
 DBX_PATH=`dbx-path "$1"` || exit
 dbxcli ls "$DBX_PATH"
+
 echo # dbxcli `ls' ommits line break
+# TODO: Only use linebreak if directory and no option

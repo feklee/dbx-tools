@@ -2,10 +2,12 @@
 
 source "`dirname $0`/init.sh"
 
-ARGS=PATH
-DESCRIPTION="Returns success if the path exists in the Dropbox and is a directory."
+NON_OPTION_ARGS=PATH
+DESCRIPTION="Return success if the path exists in the Dropbox and is a directory."
 
-test -z "$1" && dbx-exit-on-usage "$ARGS" "$DESCRIPTION"
+parse_options "$@"
+
+test -z "$1" && dbx-exit-on-missing-args
 
 ABSOLUTE_PATH=`realpath -m "/$1"`
 DIRNAME=`dirname "$ABSOLUTE_PATH"`

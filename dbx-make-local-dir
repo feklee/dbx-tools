@@ -2,7 +2,7 @@
 
 source "`dirname $0`/init.sh"
 
-ARGS=PATH
+NON_OPTION_ARGS=PATH
 DESCRIPTION=$(cat <<EOF
 If not existing, creates a local directory corresponding to the
 path on Dropbox, relative to the current location. Outputs that
@@ -10,7 +10,9 @@ directory.
 EOF
 	   )
 
-test -z "$1" && dbx-exit-on-usage "$ARGS" "$DESCRIPTION"
+parse_options "$@"
+
+test -z "$1" && dbx-exit-on-missing-args
 
 DBX_PATH=`dbx-path "$1"` || exit
 dbx-test-dir "$DBX_PATH" || exit

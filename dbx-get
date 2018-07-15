@@ -1,0 +1,43 @@
+#!/bin/bash
+
+source "`dirname $0`/init.sh"
+
+NON_OPTION_ARGS="PATH"
+
+DESCRIPTION=$(cat <<EOF
+Download PATH from the Dropbox.
+EOF
+	   )
+
+dbx-parse-options "$@"
+shift $((OPTIND-1))
+
+P="$1"
+shift || dbx-exit-on-missing-args
+
+shopt -s nocasematch
+
+function dbx-path-from-match {
+    M=${BASH_REMATCH[0]}
+    C=${#M}
+    echo ${LINE:$C}
+}
+
+#dbx-ls -R "$P" | \
+cat ~/tmp/out | \
+    tail -n +2 | \
+    while read LINE; do
+	if [[ $LINE =~ ^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+ ]]; then
+	    P=`dbx-path-from-match`
+	    echo "$P"
+	    exit
+	    LOCAL_DIR=$(dbx-make-local-dir "$P")
+	    echo "Created: $LOCAL_DIR"
+	elif [[ $LINE =~ ^[^/]+ ]]; then
+	    M=${BASH_REMATCH[0]}
+	    C=${#M}
+	    FILE=${LINE:$C}
+	    # TODO: check path of file, and create parent dir (or above)
+	    echo dbxcli get "$FILE" "$DBX_HOME/$FILE" || exit
+	fi
+    done

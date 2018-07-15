@@ -2,7 +2,8 @@
 
 source "`dirname $0`/init.sh"
 
-parse_options "$@"
+dbx-parse-options "$@"
+shift $((OPTIND-1))
 
 # Unlikely, but who knows...:
 if test "$DBX_HOME" = /; then

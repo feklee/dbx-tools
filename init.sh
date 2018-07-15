@@ -37,17 +37,18 @@ function dbx-exit-on-invalid-option {
     dbx-exit-on-error "Invalid option: -$1"
 }
 
-function parse_options {
+function dbx-parse-options {
     KEYS=${!OPTIONS[@]}
     OPTSTRING=":${KEYS// /}"
+    ENABLED_OPTIONS=""
     while getopts "$OPTSTRING" OPT; do
-	test $OPT = "?" && dbx-exit-on-invalid-option $OPTARG
-	test $OPT = "h" && dbx-exit-on-help
+	test $OPT = ? && dbx-exit-on-invalid-option $OPTARG
+	test $OPT = h && dbx-exit-on-help
 	ENABLED_OPTIONS+=$OPT
     done
 }
 
-function test_option_enabled {
+function dbx-test-option-enabled {
     [[ $ENABLED_OPTIONS = *$1* ]]
 }
 

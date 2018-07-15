@@ -5,7 +5,8 @@ source "`dirname $0`/init.sh"
 NON_OPTION_ARGS=PATH
 DESCRIPTION="Return success if the path exists in the Dropbox and is a directory."
 
-parse_options "$@"
+dbx-parse-options "$@"
+shift $((OPTIND-1))
 
 test -z "$1" && dbx-exit-on-missing-args
 

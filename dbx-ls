@@ -13,13 +13,14 @@ specified, about PATH.
 EOF
 	   )
 
-parse_options "$@"
-echo $ENABLED_OPTIONS
-test_option_enabled l && echo "l is enabled"
-exit
+dbx-parse-options "$@"
+shift $((OPTIND-1))
 
 DBX_PATH=`dbx-path "$1"` || exit
-dbxcli ls "$DBX_PATH"
 
-echo # dbxcli `ls' ommits line break
-# TODO: Only use linebreak if directory and no option
+test -n "$ENABLED_OPTIONS" && S=-$ENABLED_OPTIONS || S=""
+dbxcli ls $S "$DBX_PATH" || exit
+
+# Add trailing line break because `dbxcli ls' sometimes doesn't
+# without `-l':
+dbx-test-option-enabled l || echo

@@ -27,17 +27,15 @@ function dbx-path-from-match {
 cat ~/tmp/out | \
     tail -n +2 | \
     while read LINE; do
-	if [[ $LINE =~ ^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+ ]]; then
-	    P=`dbx-path-from-match`
-	    echo "$P"
-	    exit
-	    LOCAL_DIR=$(dbx-make-local-dir "$P")
-	    echo "Created: $LOCAL_DIR"
+	if [[ $LINE =~ ^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+ ]];
+	then
+	    DBX_PATH=`dbx-path-from-match`
+	    LOCAL_PATH=`dbx-local-path "$DBX_PATH"`
+	    mkdir -p "$LOCAL_PATH"
+	    echo "Created directory: $LOCAL_PATH"
 	elif [[ $LINE =~ ^[^/]+ ]]; then
-	    M=${BASH_REMATCH[0]}
-	    C=${#M}
-	    FILE=${LINE:$C}
-	    # TODO: check path of file, and create parent dir (or above)
-	    echo dbxcli get "$FILE" "$DBX_HOME/$FILE" || exit
+	    DBX_PATH=`dbx-path-from-match`
+	    LOCAL_PATH=`dbx-local-path "$DBX_PATH"`
+	    echo dbxcli get "$DBX_PATH" "$LOCAL_PATH" || exit
 	fi
     done

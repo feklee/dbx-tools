@@ -4,6 +4,12 @@ function dbx-test-absolute {
     [[ "${1:0:1}" == / || "${1:0:2}" == ~[/a-z] ]]
 }
 
+function dbx-test-in-home {
+    LOCAL_PATH="$1"
+    DBX_PATH=${LOCAL_PATH##$DBX_HOME}
+    test "$DBX_PATH" != "$1"
+}
+
 function dbx-exit-on-error {
     echo "$1" >&2
     exit 1
@@ -50,6 +56,14 @@ function dbx-parse-options {
 
 function dbx-test-option-enabled {
     [[ $ENABLED_OPTIONS = *$1* ]]
+}
+
+function dbx-local-path {
+    ABSOLUTE_PATH_ON_DBX="$1"
+    LOCAL_PATH=`realpath -m "$DBX_HOME/$ABSOLUTE_PATH_ON_DBX"`
+    dbx-test-in-home "$LOCAL_PATH" || \
+	dbx-exit-on-error "Not in \$DBX_HOME: $LOCAL_PATH"
+    echo $LOCAL_PATH
 }
 
 # TODO: Check installation of dbxcli

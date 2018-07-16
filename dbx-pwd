@@ -13,7 +13,7 @@ fi
 
 DBX_PWD=${PWD##$DBX_HOME}
 test "$DBX_PWD" = "$PWD" && \
-    dbx-exit-on-error "Current directory not in \$DBX_HOME (\`$DBX_HOME')"
+    dbx-exit-on-error "Current directory not in \$DBX_HOME"
 
 if test -z "$DBX_PWD"; then
     echo "/"

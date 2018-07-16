@@ -6,7 +6,7 @@ NON_OPTION_ARGS=PATH
 DESCRIPTION=$(cat <<EOF
 If not existing, creates a local directory corresponding to the
 path on Dropbox, relative to the current location. Outputs that
-directory.
+directory. Fails if the directory does not exist on Dropbox.
 EOF
 	   )
 

@@ -16,11 +16,29 @@ EOF
 dbx-parse-options "$@"
 shift $((OPTIND-1))
 
-DBX_PATH=`dbx-path "$1"` || exit
+DBX_PATH=`dbx-path "$1"`
 
 test -n "$ENABLED_OPTIONS" && S=-$ENABLED_OPTIONS || S=""
-dbxcli ls $S "$DBX_PATH" || exit
+dbx-test-option-enabled l && { dbxcli ls $S "$DBX_PATH"; exit; }
 
-# Add trailing line break because `dbxcli ls' sometimes doesn't
-# without `-l':
-dbx-test-option-enabled l || echo
+function dbx-relative-path-from-match {
+    P=`dbx-path-from-match "$1"`
+    C=${#DBX_PATH}
+    P="${P:$C}"
+    echo ${P:1}
+}
+
+shopt -s nocasematch
+
+dbxcli ls -l $S "$DBX_PATH" | \
+    tail -n +2 | \
+    while read LINE; do
+	if [[ $LINE =~ ^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+ ]];
+	then
+	    P="`dbx-relative-path-from-match`/"
+	elif [[ $LINE =~ ^[^/]+ ]]; then
+	    P=`dbx-relative-path-from-match`
+	fi
+	test $P = / || echo $P
+    done
+

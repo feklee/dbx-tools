@@ -19,12 +19,6 @@ shift || dbx-exit-on-missing-args
 
 shopt -s nocasematch
 
-function dbx-path-from-match {
-    M=${BASH_REMATCH[0]}
-    C=${#M}
-    echo ${LINE:$C}
-}
-
 dbx-ls -Rl "$P" | \
     tail -n +2 | \
     while read LINE; do

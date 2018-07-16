@@ -23,8 +23,10 @@ dbx-test-option-enabled l && { dbxcli ls $S "$DBX_PATH"; exit; }
 
 function dbx-relative-path-from-match {
     P=`dbx-path-from-match "$1"`
-    C=${#DBX_PATH}
-    P="${P:$C}"
+    if test "$DBX_PATH" != /; then
+	C=${#DBX_PATH}
+	P="${P:$C}"
+    fi
     echo ${P:1}
 }
 

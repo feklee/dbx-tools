@@ -37,10 +37,10 @@ dbxcli ls -l $S "$DBX_PATH" | \
     while read LINE; do
 	if [[ $LINE =~ ^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+ ]];
 	then
-	    P="`dbx-relative-path-from-match`/"
+	    FILE="`dbx-relative-path-from-match`/"
 	elif [[ $LINE =~ ^[^/]+ ]]; then
-	    P=`dbx-relative-path-from-match`
+	    FILE=`dbx-relative-path-from-match`
 	fi
-	test "$P" = / || echo $P
+	test "$FILE" = / || echo $FILE
     done
 

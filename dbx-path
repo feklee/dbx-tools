@@ -4,7 +4,7 @@ source "`dirname $0`/init.sh"
 
 ARGS="[SUB_PATH]"
 DESCRIPTION=$(cat <<EOF
-Asswmble a path on Dropbox from the current Dropbox working directory
+Assemble a path on Dropbox from the current Dropbox working directory
 and the optional sub path. Check if the past exists in the Dropbox.
 EOF
 	   )
@@ -14,6 +14,7 @@ shift $((OPTIND-1))
 
 DBX_PWD=`dbx-pwd 2>/dev/null` || DBX_PWD=""
 DBX_PATH=`realpath -m "$DBX_PWD/$1"`
+    
 dbx-test-path "$DBX_PATH" || exit
 
 echo "$DBX_PATH"

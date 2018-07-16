@@ -5,7 +5,9 @@ source "`dirname $0`/init.sh"
 NON_OPTION_ARGS="PATH"
 
 DESCRIPTION=$(cat <<EOF
-Download PATH from the Dropbox.
+Download PATH from the Dropbox. If PATH is a directory, downloads its
+contents recursively. Dropbox is case insensitive to file names. If a
+file already exists locally, the case of its name is preserved.
 EOF
 	   )
 
@@ -23,19 +25,19 @@ function dbx-path-from-match {
     echo ${LINE:$C}
 }
 
-#dbx-ls -R "$P" | \
-cat ~/tmp/out | \
+dbx-ls -Rl "$P" | \
     tail -n +2 | \
     while read LINE; do
 	if [[ $LINE =~ ^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+ ]];
 	then
 	    DBX_PATH=`dbx-path-from-match`
 	    LOCAL_PATH=`dbx-local-path "$DBX_PATH"`
+	    echo "Creating local directory: $LOCAL_PATH"
 	    mkdir -p "$LOCAL_PATH"
-	    echo "Created directory: $LOCAL_PATH"
 	elif [[ $LINE =~ ^[^/]+ ]]; then
 	    DBX_PATH=`dbx-path-from-match`
 	    LOCAL_PATH=`dbx-local-path "$DBX_PATH"`
-	    echo dbxcli get "$DBX_PATH" "$LOCAL_PATH" || exit
+	    echo "$DBX_PATH"
+	    dbxcli get "$DBX_PATH" "$LOCAL_PATH" || exit
 	fi
     done

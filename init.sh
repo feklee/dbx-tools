@@ -59,10 +59,29 @@ function dbx-test-option-enabled {
 }
 
 function dbx-local-path {
-    ABSOLUTE_PATH_ON_DBX="$1"
-    LOCAL_PATH=`realpath -m "$DBX_HOME/$ABSOLUTE_PATH_ON_DBX"`
-    dbx-test-in-home "$LOCAL_PATH" || \
-	dbx-exit-on-error "Not in \$DBX_HOME: $LOCAL_PATH"
+    # Argument is expected to be absolute, enforce that:
+    ABSOLUTE_PATH_ON_DBX=`realpath -m "/$1"`
+
+    # Go into dir, step by step, stripping the path from the
+    # front. This is done to get the same case as already locally set
+    # up (Dropbox is case insensitive, some `dbxcli' commands return
+    # paths in different case than others).
+    DBX_PATH="${ABSOLUTE_PATH_ON_DBX:1}"
+    cd "$DBX_HOME"
+    while test -n "$DBX_PATH"; do
+	S=${DBX_PATH%%/*}
+	test "$S" != . && DBX_SUB_DIR="$S" || \
+		DBX_SUB_DIR="$DBX_PATH"
+	LOCAL_FILE=`find -iname "$DBX_SUB_DIR" -maxdepth 1 | \
+head -n 1`
+	test -z "$LOCAL_FILE" && break
+	test -f "$LOCAL_FILE" && { DBX_PATH="$LOCAL_FILE"; break; }
+	cd "$LOCAL_FILE"
+	DBX_PATH=${DBX_PATH##$DBX_SUB_DIR}
+	DBX_PATH=${DBX_PATH##/}
+    done
+
+    LOCAL_PATH=`realpath -m "$PWD/$DBX_PATH"`
     echo $LOCAL_PATH
 }
 

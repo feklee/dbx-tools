@@ -18,8 +18,8 @@ test -z "$1" && dbx-exit-on-missing-args
 DBX_PATH=`dbx-path "$1"` || exit
 dbx-test-dir "$DBX_PATH" || exit
 
-LOCAL_PATH="$DBX_HOME$DBX_PATH"
-mkdir -p "$LOCAL_PATH" || \
+LOCAL_PATH=`dbx-local-path "$DBX_PATH"`
+echo mkdir -p "$LOCAL_PATH" || \
     dbx-exit-on-error "Cannot create local directory: $LOCAL_PATH"
 
 echo "$LOCAL_PATH"

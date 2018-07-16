@@ -1,0 +1,32 @@
+#!/bin/bash
+
+source "`dirname $0`/init.sh"
+
+NON_OPTION_ARGS="PATH"
+
+DESCRIPTION=$(cat <<EOF
+Upload PATH to the Dropbox. If PATH is a directory, uploadss its
+contents recursively.
+EOF
+	   )
+
+dbx-parse-options "$@"
+shift $((OPTIND-1))
+
+P="$1"
+shift || dbx-exit-on-missing-args
+
+ABSOLUTE_LOCAL_PATH=`realpath -m "$PWD/$P"`
+
+dbx-test-in-home "$ABSOLUTE_LOCAL_PATH" ||  \
+    dbx-exit-on-error "Path not in \$DBX_HOME"
+
+DBX_PATH=${ABSOLUTE_LOCAL_PATH##$DBX_HOME/}
+
+cd "$DBX_HOME"
+find "$DBX_PATH" -type f | \
+    while read FILE; do
+	echo dbxcli upload "$FILE" "$FILE"
+    done
+
+exit

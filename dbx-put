@@ -26,7 +26,5 @@ DBX_PATH=${ABSOLUTE_LOCAL_PATH##$DBX_HOME/}
 cd "$DBX_HOME"
 find "$DBX_PATH" -type f | \
     while read FILE; do
-	echo dbxcli upload "$FILE" "$FILE"
+	dbxcli put "$FILE" "$FILE"
     done
-
-exit

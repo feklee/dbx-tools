@@ -39,6 +39,6 @@ dbxcli ls -l $S "$DBX_PATH" | \
 	elif [[ $LINE =~ ^[^/]+ ]]; then
 	    P=`dbx-relative-path-from-match`
 	fi
-	test $P = / || echo $P
+	test "$P" = / || echo $P
     done
 

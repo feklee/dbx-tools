@@ -85,12 +85,6 @@ head -n 1`
     echo $LOCAL_PATH
 }
 
-function dbx-path-from-match {
-    M=${BASH_REMATCH[0]}
-    C=${#M}
-    echo ${LINE:$C}
-}
-
 # TODO: Check installation of dbxcli
 realpath -m /dbx-nothing >/dev/null 2>&1 && \
     realpath -e / >/dev/null 2>&1 || \

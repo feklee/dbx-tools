@@ -18,29 +18,60 @@ shift $((OPTIND-1))
 
 DBX_PATH=`dbx-path "$1"`
 
-test -n "$ENABLED_OPTIONS" && S=-$ENABLED_OPTIONS || S=""
-dbx-test-option-enabled l && { dbxcli ls $S "$DBX_PATH"; exit; }
-
 function dbx-relative-path-from-match {
-    P=`dbx-path-from-match "$1"`
+    P="${LINE##$1}"
     if test "$DBX_PATH" != /; then
 	C=${#DBX_PATH}
 	P="${P:$C}"
     fi
-    echo ${P:1}
+    P="${P:1}"
+    test "$P" = / && P=""
+    echo $P
+}
+
+function dbx-print-path-line {
+    LINE="$1"
+    MATCH="$2"
+    TAIL="$3"
+    test -v LONG && echo -n "$MATCH"
+    echo `dbx-relative-path-from-match "$MATCH"`$TAIL
 }
 
 shopt -s nocasematch
 
+dbx-test-option-enabled l && LONG=yes
+
 dbxcli ls -l $S "$DBX_PATH" | \
-    tail -n +2 | \
     while read LINE; do
-	if [[ $LINE =~ ^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+ ]];
+	if [[ $LINE =~ ^Revision ]]; then
+	    # Heading
+	    test -v LONG && echo "$LINE"
+	elif [[ $LINE =~ ^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+ ]];
 	then
-	    FILE="`dbx-relative-path-from-match`/"
+	    # Directory
+	    dbx-print-path-line "$LINE" "${BASH_REMATCH[0]}" /
 	elif [[ $LINE =~ ^[^/]+ ]]; then
-	    FILE=`dbx-relative-path-from-match`
+	    # Regular file
+	    dbx-print-path-line "$LINE" "${BASH_REMATCH[0]}"
 	fi
-	test "$FILE" = / || echo $FILE
     done
 
+exit
+
+test -n "$ENABLED_OPTIONS" && S=-$ENABLED_OPTIONS || S=""
+if dbx-test-option-enabled l; then
+#TODO    if path is specified and -R; then
+#TODO	if second line is for directory; then
+#	    replace that with .
+#	else
+#	    
+#	fi
+    #    fi
+    # Maybe go line by line, and check for matches:
+    # dir -> skip, file -> only replace dirname
+    test "$DBX_PATH" = / && HEAD=/ || HEAD="$DBX_PATH/"
+    dbxcli ls $S "$DBX_PATH" | \
+	sed "s|$DBX_PATH[^$ ]||i" | \
+	sed "s|/||"
+    exit
+fi

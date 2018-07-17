@@ -19,6 +19,12 @@ shift || dbx-exit-on-missing-args
 
 shopt -s nocasematch
 
+function dbx-path-from-match {
+    M=${BASH_REMATCH[0]}
+    C=${#M}
+    echo ${LINE:$C}
+}
+
 DBX_PATH=`dbx-path "$P"`
 dbxcli ls -Rl "$DBX_PATH" | \
     tail -n +2 | \

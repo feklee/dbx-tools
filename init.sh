@@ -85,7 +85,13 @@ head -n 1`
     echo $LOCAL_PATH
 }
 
-# TODO: Check installation of dbxcli
+which dbxcli >/dev/null 2>&1 || dbx-exit-on-error "\`dbxcli' not found"
+# `echo' to cancel possible login prompt:
+echo | OUT=`dbxcli version 2>/dev/null` || \
+    dbx-exit-on-error "Cannot get version of \`dbxcli'. Are you logged in?"
+# Version check using `$OUT' is currently not implemented, see:
+# https:/github.com/dropbox/dbxcli/issues/99
+
 realpath -m /dbx-nothing >/dev/null 2>&1 && \
     realpath -e / >/dev/null 2>&1 || \
     dbx-exit-on-error "Installed \`realpath' does not support required options \`-m' and \`-e'.

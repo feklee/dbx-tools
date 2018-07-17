@@ -4,7 +4,10 @@ Introduction
 *dbx-tools* is a set of command line tools to *manually* keep a local
 directory in sync with your Dropbox.
 
-It depends on [dbxcli][1]
+It depends on [dbxcli][1].
+
+*This is experimental software!* Use it responsibly, i.e. better avoid
+manipulations of large directories.
 
 
 Sample session
@@ -13,7 +16,7 @@ Sample session
  1. Create a path for your Dropbox and tell dbx-tools about it.
 
         ~$ mkdir Dropbox
-	~$ export DBX_HOME="$HOME/Dropbox"
+		~$ export DBX_HOME="$HOME/Dropbox"
 
  2. Enable `dbx-cd`:
 
@@ -22,30 +25,59 @@ Sample session
  3. To get help on any command, use the `-h` option:
 
         ~$ dbx-ls -h
-	...
+		Usage: dbx-ls […]
 
  4. Navigate your Dropbox, noting that local paths are created if
     necessary:
 
-	~$ dbx-ls
-	~$ dbx-cd "My Data"
-	~$ dbx-pwd
-	My Data
-	~$ pwd
-	~/My Data
+		~$ cd Dropbox
+		~/Dropbox$ dbx-ls
+		Pictures/
+		Documents/
+		README
+		~/Dropbox$ dbx-cd Documents
+		~/Dropbox/Documents$ dbx-pwd
+		/Documents
 
- 5. Upload a file:
+ 5. Create and upload a file:
 
-        echo "Hello World"
+		~/Dropbox$ echo Hello >Greeting.txt
+		~/Dropbox$ dbx-put Greeting.txt
+		[…]
+		~/Dropbox$ dbx-ls -l
+		Revision         Size  Last modified  Path
+		[…]
+		54913be5010b7a9a 6 B   47 seconds ago Greeting.txt
+		[…]
 
- 6. Upload a directory:
+ 6. Create and upload a directory:
 
- 7. Download a file
+		~/Dropbox$ mkdir Greetings
+		~/Dropbox$ echo Hello >Greetings/en
+		~/Dropbox$ echo Hallo >Greetings/de
+		~/Dropbox$ echo Salut >Greetings/fr
+		~/Dropbox$ echo Hola >Greetings/es
+		~/Dropbox$ dbx-put Greetings
+		[…]
+		~/Dropbox$ dbx-ls -R
+		[…]
+		Greetings/
+		[…]
+		Greetings/en
+		Greetings/de
+		Greetings/fr
+		Greetings/es
+		[…]
+
+ 7. Download a file:
+ 
+	    ~/Dropbox$ dbx-get Goodbye.txt
+		[…]
 
  8. Download a directory
 
-        dbx-ls -R dir
-	find dir
+        ~/Dropbox$ dbx-get Goodbyes
+		[…]
 
 
 License

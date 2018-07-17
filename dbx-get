@@ -19,24 +19,20 @@ shift || dbx-exit-on-missing-args
 
 shopt -s nocasematch
 
-function dbx-path-from-match {
-    M=${BASH_REMATCH[0]}
-    C=${#M}
-    echo ${LINE:$C}
-}
-
 DBX_PATH=`dbx-path "$P"`
 dbxcli ls -Rl "$DBX_PATH" | \
     tail -n +2 | \
     while read LINE; do
 	if [[ $LINE =~ ^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+ ]];
 	then
-	    DBX_FILE=`dbx-path-from-match`
+	    M=${BASH_REMATCH[0]}
+	    DBX_FILE="${LINE##$M}"
 	    LOCAL_FILE=`dbx-local-path "$DBX_FILE"`
 	    echo "Creating local directory: $LOCAL_FILE"
 	    mkdir -p "$LOCAL_FILE"
 	elif [[ $LINE =~ ^[^/]+ ]]; then
-	    DBX_FILE=`dbx-path-from-match`
+	    M=${BASH_REMATCH[0]}
+	    DBX_FILE="${LINE##$M}"
 	    LOCAL_FILE=`dbx-local-path "$DBX_FILE"`
 	    echo "$DBX_FILE"
 	    dbxcli get "$DBX_FILE" "$LOCAL_FILE" || exit

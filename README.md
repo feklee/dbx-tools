@@ -1,49 +1,55 @@
 Introduction
 ============
 
-*dbx-tools* is a set of command line tools to *manually* keep a local
+*dbx-tools* is a set of command line tools to manually keep a local
 directory in sync with your Dropbox.
 
-dbx-tools depends on [dbxcli][1]. It was tested with:
+dbx-tools depends on [dbxcli][1]. It was tested with dbxcli Git
+release v2.1.1:
 
 	dbxcli version: 0.1.0
 	SDK version: 4.5.0
 	Spec version: a1d5111
 
-*This is experimental software!* Use it responsibly, i.e. better avoid
-manipulations of large directories.
+*This is experimental software!* Use it responsibly, especially when
+manipulating lots of files at once.
 
 
 Sample session
 ==============
 
- 1. Create a path for your Dropbox and tell dbx-tools about it.
+ 1. Make sure that `dbxcli` is available and that you are logged into
+    Dropbox:
+
+		~$ dbxcli account
+
+ 2. Create a path for your Dropbox and tell dbx-tools about it.
 
         ~$ mkdir Dropbox
 		~$ export DBX_HOME="$HOME/Dropbox"
 
- 2. Enable `dbx-cd`:
+ 3. Enable `dbx-cd`:
 
         ~$ source "`which dbx-cd-source`"
 
- 3. To get help on any command, use the `-h` option:
+ 4. To get help on any command, use the `-h` option:
 
         ~$ dbx-ls -h
 		Usage: dbx-ls […]
 
- 4. Navigate your Dropbox, noting that local paths are created if
+ 5. Navigate your Dropbox, noting that local paths are created if
     necessary:
 
 		~$ cd Dropbox
 		~/Dropbox$ dbx-ls
 		Pictures/
 		Documents/
-		README
+		Info.txt
 		~/Dropbox$ dbx-cd Documents
 		~/Dropbox/Documents$ dbx-pwd
 		/Documents
 
- 5. Create and upload a file:
+ 6. Create and upload a file:
 
 		~/Dropbox$ echo Hello >Greeting.txt
 		~/Dropbox$ dbx-put Greeting.txt
@@ -54,7 +60,7 @@ Sample session
 		54913be5010b7a9a 6 B   47 seconds ago Greeting.txt
 		[…]
 
- 6. Create and upload a directory:
+ 7. Create and upload a directory:
 
 		~/Dropbox$ mkdir Greetings
 		~/Dropbox$ echo Hello >Greetings/en
@@ -73,12 +79,12 @@ Sample session
 		Greetings/es
 		[…]
 
- 7. Download a file:
+ 8. Download a file:
  
 	    ~/Dropbox$ dbx-get Goodbye.txt
 		[…]
 
- 8. Download a directory
+ 9. Download a directory
 
         ~/Dropbox$ dbx-get Goodbyes
 		[…]

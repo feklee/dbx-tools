@@ -24,6 +24,7 @@ function dbx-relative-path-from-match {
     ISDIR=$2
     P="${LINE##$MATCH}"
     if test "${P,,}" == "${DBX_PATH,,}"; then
+	# Path is the one that was requested
 	test "$ISDIR" = yes && echo . || echo "$REQUESTED_PATH"
 	exit
     fi
@@ -43,7 +44,8 @@ function dbx-print-path-line {
     RELPATH=`dbx-relative-path-from-match "$MATCH" $ISDIR`
     test -v LONG && echo -n "$MATCH"
     echo -n "$RELPATH"
-    test "$RELPATH" != . && test "$ISDIR" = yes && echo -n /
+    test "$RELPATH" != . && test "$ISDIR" = yes && test ! -v LONG && \
+	echo -n /
     echo
 }
 

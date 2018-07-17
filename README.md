@@ -4,7 +4,11 @@ Introduction
 *dbx-tools* is a set of command line tools to *manually* keep a local
 directory in sync with your Dropbox.
 
-It depends on [dbxcli][1].
+dbx-tools depends on [dbxcli][1]. It was tested with:
+
+	dbxcli version: 0.1.0
+	SDK version: 4.5.0
+	Spec version: a1d5111
 
 *This is experimental software!* Use it responsibly, i.e. better avoid
 manipulations of large directories.

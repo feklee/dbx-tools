@@ -55,23 +55,3 @@ dbxcli ls -l $S "$DBX_PATH" | \
 	    dbx-print-path-line "$LINE" "${BASH_REMATCH[0]}"
 	fi
     done
-
-exit
-
-test -n "$ENABLED_OPTIONS" && S=-$ENABLED_OPTIONS || S=""
-if dbx-test-option-enabled l; then
-#TODO    if path is specified and -R; then
-#TODO	if second line is for directory; then
-#	    replace that with .
-#	else
-#	    
-#	fi
-    #    fi
-    # Maybe go line by line, and check for matches:
-    # dir -> skip, file -> only replace dirname
-    test "$DBX_PATH" = / && HEAD=/ || HEAD="$DBX_PATH/"
-    dbxcli ls $S "$DBX_PATH" | \
-	sed "s|$DBX_PATH[^$ ]||i" | \
-	sed "s|/||"
-    exit
-fi

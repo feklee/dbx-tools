@@ -16,10 +16,17 @@ EOF
 dbx-parse-options "$@"
 shift $((OPTIND-1))
 
+REQUESTED_PATH=$1
 DBX_PATH=`dbx-path "$1"`
 
 function dbx-relative-path-from-match {
-    P="${LINE##$1}"
+    MATCH=$1
+    ISDIR=$2
+    P="${LINE##$MATCH}"
+    if test "${P,,}" == "${DBX_PATH,,}"; then
+	test "$ISDIR" = yes && echo . || echo "$REQUESTED_PATH"
+	exit
+    fi
     if test "$DBX_PATH" != /; then
 	C=${#DBX_PATH}
 	P="${P:$C}"
@@ -32,16 +39,20 @@ function dbx-relative-path-from-match {
 function dbx-print-path-line {
     LINE="$1"
     MATCH="$2"
-    TAIL="$3"
+    ISDIR=$3
+    RELPATH=`dbx-relative-path-from-match "$MATCH" $ISDIR`
     test -v LONG && echo -n "$MATCH"
-    echo `dbx-relative-path-from-match "$MATCH"`$TAIL
+    echo -n "$RELPATH"
+    test "$RELPATH" != . && test "$ISDIR" = yes && echo -n /
+    echo
 }
 
 shopt -s nocasematch
 
 dbx-test-option-enabled l && LONG=yes
+dbx-test-option-enabled R && O=-R
 
-dbxcli ls -l $S "$DBX_PATH" | \
+dbxcli ls -l $O "$DBX_PATH" | \
     while read LINE; do
 	if [[ $LINE =~ ^Revision ]]; then
 	    # Heading
@@ -49,11 +60,9 @@ dbxcli ls -l $S "$DBX_PATH" | \
 	elif [[ $LINE =~ ^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+ ]];
 	then
 	    # Directory
-	    dbx-print-path-line "$LINE" "${BASH_REMATCH[0]}" /
+	    dbx-print-path-line "$LINE" "${BASH_REMATCH[0]}" yes
 	elif [[ $LINE =~ ^[^/]+ ]]; then
 	    # Regular file
 	    dbx-print-path-line "$LINE" "${BASH_REMATCH[0]}"
 	fi
     done
-
-# TODO: check recursive listing

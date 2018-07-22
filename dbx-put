@@ -2,6 +2,7 @@
 
 source "`dirname $0`/init.sh"
 
+START_PWD="$PWD"
 NON_OPTION_ARGS="PATH"
 
 DESCRIPTION=$(cat <<EOF
@@ -26,5 +27,9 @@ DBX_PATH=${ABSOLUTE_LOCAL_PATH##$DBX_HOME/}
 cd "$DBX_HOME"
 find "$DBX_PATH" -type f | \
     while read FILE; do
-	dbxcli put "$FILE" "$FILE"
+	LOCAL_FILE=`dbx-local-path "$FILE"`
+	RELATIVE_FILE="${LOCAL_FILE##$START_PWD/}"
+	dbxcli put "$FILE" "$FILE" && \
+	    echo "Success uploading $RELATIVE_FILE" || \
+		dbx-exit-on-error "Failure uploading $RELATIVE_FILE"
     done

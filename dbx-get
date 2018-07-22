@@ -5,7 +5,7 @@ source "`dirname $0`/init.sh"
 NON_OPTION_ARGS="PATH"
 
 DESCRIPTION=$(cat <<EOF
-Download PATH from the Dropbox. If PATH is a directory, downloads its
+Download PATH from the Dropbox. If PATH is a directory, download its
 contents recursively. Dropbox is case insensitive to file names. If a
 file already exists locally, the case of its name is preserved.
 EOF

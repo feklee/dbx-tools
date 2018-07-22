@@ -6,7 +6,7 @@ START_PWD="$PWD"
 NON_OPTION_ARGS="PATH"
 
 DESCRIPTION=$(cat <<EOF
-Upload PATH to the Dropbox. If PATH is a directory, uploadss its
+Upload PATH to the Dropbox. If PATH is a directory, upload its
 contents recursively.
 EOF
 	   )

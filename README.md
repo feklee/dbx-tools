@@ -11,8 +11,13 @@ release v2.1.1:
 	SDK version: 4.5.0
 	Spec version: a1d5111
 
-*This is experimental software!* Use it responsibly, especially when
-manipulating lots of files at once.
+For production, use one of the *releases* tagged in Git. And, keep in
+mind:
+
+*This is experimental software!*
+
+Use it responsibly, especially when manipulating lots of files at
+once.
 
 
 Sample session

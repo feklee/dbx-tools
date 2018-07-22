@@ -19,22 +19,29 @@ shift || dbx-exit-on-missing-args
 
 shopt -s nocasematch
 
+function dbx-process-match {
+    M=${BASH_REMATCH[0]}
+    DBX_FILE="${LINE##$M}"
+    ABS_LOCAL_FILE=`dbx-local-path "$DBX_FILE"`
+    LOCAL_FILE="${ABS_LOCAL_FILE##$PWD/}"
+}
+
 DBX_PATH=`dbx-path "$P"`
 dbxcli ls -Rl "$DBX_PATH" | \
     tail -n +2 | \
     while read LINE; do
 	if [[ $LINE =~ ^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+ ]];
 	then
-	    M=${BASH_REMATCH[0]}
-	    DBX_FILE="${LINE##$M}"
-	    LOCAL_FILE=`dbx-local-path "$DBX_FILE"`
-	    echo "Creating local directory: $LOCAL_FILE"
-	    mkdir -p "$LOCAL_FILE"
+	    dbx-process-match
+	    ACTION="creating local directory $LOCAL_FILE"
+	    mkdir -p "$LOCAL_FILE" && \
+		echo "Success $ACTION" || \
+		    dbx-exit-on-error "Failure $ACTION"
 	elif [[ $LINE =~ ^[^/]+ ]]; then
-	    M=${BASH_REMATCH[0]}
-	    DBX_FILE="${LINE##$M}"
-	    LOCAL_FILE=`dbx-local-path "$DBX_FILE"`
-	    echo "$DBX_FILE"
-	    dbxcli get "$DBX_FILE" "$LOCAL_FILE" || exit
+	    dbx-process-match
+	    ACTION="downloading $LOCAL_FILE"
+	    dbxcli get "$DBX_FILE" "$LOCAL_FILE" && \
+		echo "Success $ACTION" || \
+		    dbx-exit-on-error "Failure $ACTION"
 	fi
     done

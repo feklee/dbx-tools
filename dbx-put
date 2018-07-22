@@ -16,7 +16,7 @@ shift $((OPTIND-1))
 P="$1"
 shift || dbx-exit-on-missing-args
 
-ABSOLUTE_LOCAL_PATH=`realpath -m "$PWD/$P"`
+ABSOLUTE_LOCAL_PATH=`realpath -m "$P"`
 
 dbx-test-in-home "$ABSOLUTE_LOCAL_PATH" ||  \
     dbx-exit-on-error "Path not in \$DBX_HOME"

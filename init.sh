@@ -67,7 +67,7 @@ function dbx-local-path {
     # up (Dropbox is case insensitive, some `dbxcli' commands return
     # paths in different case than others).
     DBX_PATH="${ABSOLUTE_PATH_ON_DBX:1}"
-    cd "$DBX_HOME"
+    cd "$DBX_HOME" || return 1
     while test -n "$DBX_PATH"; do
 	S=${DBX_PATH%%/*}
 	test "$S" != . && DBX_SUB_DIR="$S" || \
@@ -76,7 +76,7 @@ function dbx-local-path {
 head -n 1`
 	test -z "$LOCAL_FILE" && break
 	test -f "$LOCAL_FILE" && { DBX_PATH="$LOCAL_FILE"; break; }
-	cd "$LOCAL_FILE"
+	cd "$LOCAL_FILE" || return 1
 	DBX_PATH=${DBX_PATH##$DBX_SUB_DIR}
 	DBX_PATH=${DBX_PATH##/}
     done

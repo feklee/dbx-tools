@@ -27,9 +27,9 @@ DBX_PATH=${ABSOLUTE_LOCAL_PATH##$DBX_HOME/}
 cd "$DBX_HOME"
 find "$DBX_PATH" -type f | \
     while read FILE; do
-	LOCAL_FILE=`dbx-local-path "$FILE"`
-	RELATIVE_FILE="${LOCAL_FILE##$START_PWD/}"
+	ABS_LOCAL_FILE=`dbx-local-path "$FILE"`
+	LOCAL_FILE="${ABS_LOCAL_FILE##$START_PWD/}"
 	dbxcli put "$FILE" "$FILE" && \
-	    echo "Success uploading $RELATIVE_FILE" || \
-		dbx-exit-on-error "Failure uploading $RELATIVE_FILE"
+	    echo "Success uploading $LOCAL_FILE" || \
+		dbx-exit-on-error "Failure uploading $LOCAL_FILE"
     done

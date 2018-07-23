@@ -1,0 +1,43 @@
+#!/bin/bash
+
+source "`dirname $0`/init.sh"
+
+OPTIONS[r]="recursive removal"
+NON_OPTION_ARGS="PATH"
+DESCRIPTION=$(cat <<EOF
+Remove PATH from the Dropbox. If PATH is a directory, remove its
+contents recursively.
+EOF
+	   )
+
+dbx-parse-options "$@"
+shift $((OPTIND-1))
+
+REQUESTED_PATH="$1"
+shift || dbx-exit-on-missing-args
+
+DBX_PATH=`dbx-path "$REQUESTED_PATH"`
+
+function dbx-is-non-empty-directory {
+    dbx-test-dir "$DBX_PATH" 2>/dev/null || return 1
+    C=$(dbxcli ls -l "$DBX_PATH" | wc -l)
+    test $C -gt 1
+}
+
+if ! dbx-test-option-enabled r; then
+    dbx-is-non-empty-directory && \
+	dbx-exit-on-error "Directory is not empty: $DBX_PATH"
+fi
+
+# TODO: add y/n query with both paths, absolute
+
+dbx-test-option-enabled r && O=-f || O=
+dbxcli rm $O "$DBX_PATH" || \
+    dbx-exit-on-error "Could not remove from Dropbox: $DBX_PATH"
+
+LOCAL_PATH=`dbx-local-path "$DBX_PATH"`
+if test -a "$LOCAL_PATH"; then
+    dbx-test-option-enabled r && O=-r || O=
+    rm $O "$LOCAL_PATH" || \
+	dbx-exit-on-error "Could not remove locally: $LOCAL_PATH"
+fi

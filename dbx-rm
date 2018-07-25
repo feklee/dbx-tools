@@ -17,9 +17,10 @@ REQUESTED_PATH="$1"
 shift || exit-on-missing-args
 
 DBX_PATH=`dbx-path "$REQUESTED_PATH"`
+dbx-test-dir "$DBX_PATH" 2>/dev/null && PATH_IS_DIR=y
 
 function test-is-non-empty-directory {
-    dbx-test-dir "$DBX_PATH" 2>/dev/null || return 1
+    test -v PATH_IS_DIR || return 1
     C=$(dbxcli ls -l "$DBX_PATH" | wc -l)
     test $C -gt 1
 }
@@ -29,7 +30,10 @@ if ! test-option-enabled r; then
 	exit-on-error "Directory is not empty: $DBX_PATH"
 fi
 
-# TODO: add y/n query with both paths, absolute
+test -v PATH_IS_DIR && TYPE=Directory || TYPE=File
+echo "$TYPE to remove: $DBX_PATH"
+read -r -p "Proceed with removal? [y/N] " RESPONSE
+test "${RESPONSE,,}" = y || exit-on-cancelled
 
 test-option-enabled r && O=-f || O=
 dbxcli rm $O "$DBX_PATH" || \

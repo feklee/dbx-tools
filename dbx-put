@@ -11,7 +11,7 @@ function store-hash {
 function compute-md5 {
     {
 	stat "$FILE" && cat "$FILE"
-    } | md5sum
+    } | b2sum
 }
 
 function compute-hash {

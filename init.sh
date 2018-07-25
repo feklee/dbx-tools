@@ -43,6 +43,10 @@ function exit-on-invalid-option {
     exit-on-error "Invalid option: -$1"
 }
 
+function exit-on-cancelled {
+    exit-on-error Cancelled
+}
+
 function parse-options {
     KEYS=${!OPTIONS[@]}
     OPTSTRING=":${KEYS// /}"

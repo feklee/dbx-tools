@@ -2,24 +2,53 @@
 
 source "`dirname $0`/init.sh"
 
+set -o pipefail
+
+function store-hash {
+    touch "$HASH_DIR/$HASH"
+}
+
+function compute-md5 {
+    {
+	stat "$FILE" && cat "$FILE"
+    } | md5sum
+}
+
+function compute-hash {
+    MD5SUM=`compute-md5` || \
+	exit-on-error "Cannot compute hash for $FILE"
+    HASH=${MD5SUM%% *}
+}
+
+function test-hash-exists {
+    test -f "$HASH_DIR/$HASH"
+}
+
+function create-hash-dir {
+    HASH_DIR="$DOT_DIR/hashes"
+    mkdir -p "$HASH_DIR" || \
+	exit-on-error "Cannot create $HASH_DIR"
+}
+
+# TODO: add option -a to upload all
+
 START_PWD="$PWD"
 NON_OPTION_ARGS="PATH"
-
 DESCRIPTION=$(cat <<EOF
 Upload PATH to the Dropbox. If PATH is a directory, upload its
 contents recursively.
 EOF
 	   )
-
 parse-options "$@"
 shift $((OPTIND-1))
-
 P="$1"
 shift && test -n "$P" || exit-on-missing-args
 
+create-hash-dir
+
 ABSOLUTE_LOCAL_PATH=`realpath -m "$P"`
 
-test-in-dbx-home "$ABSOLUTE_LOCAL_PATH" ||  \
+test-in-dbx-home "$ABSOLUTE_LOCAL_PATH" || \
     exit-on-error "Path not in \$DBX_HOME"
 
 DBX_PATH=${ABSOLUTE_LOCAL_PATH##$DBX_HOME/}
@@ -29,7 +58,13 @@ find -L "$DBX_PATH" -type f | \
     while read FILE; do
 	ABS_LOCAL_FILE=`local-path "$FILE"`
 	LOCAL_FILE="${ABS_LOCAL_FILE##$START_PWD/}"
-	dbxcli put "$FILE" "$FILE" && \
-	    echo "Success uploading $LOCAL_FILE" || \
+	compute-hash
+	if test-hash-exists; then
+	    echo "Skipping previously uploaded $LOCAL_FILE"
+	else
+	    dbxcli put "$FILE" "$FILE" || \
 		exit-on-error "Failure uploading $LOCAL_FILE"
+	    echo "Success uploading $LOCAL_FILE"
+	    store-hash
+	fi
     done

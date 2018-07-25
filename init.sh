@@ -106,5 +106,7 @@ ABSOLUTE_DBX_HOME=`realpath -e $DBX_HOME` || exit-on-error "\$DBX_HOME does not 
 test-absolute "$DBX_HOME" || exit-on-error "\$DBX_HOME is not absolute"
 test -d "$DBX_HOME" || exit-on-error "\$DBX_HOME is not a directory: $DBX_HOME"
 
+DOT_DIR="$HOME/.dbx-tools"
+
 declare -A OPTIONS
 OPTIONS[h]="explain usage"

@@ -90,6 +90,25 @@ Sample session
 
         ~/Dropbox$ dbx-get Goodbyes
 		[…]
+ 
+10. Delete a file:
+
+	    ~/Dropbox$ dbx-rm Greetings.txt
+		[…]
+		~/Dropbox$ dbx-ls -l
+		Revision         Size  Last modified  Path
+		[…]
+		[remote file is missing]
+		[…]
+		~/Dropbox$ ls -l
+		[…]
+		[local file has been deleted as well]
+		[…]
+
+11. Remove a directory:
+
+	    ~/Dropbox$ dbx-rm -r Greetings
+		[…]
 
 
 License

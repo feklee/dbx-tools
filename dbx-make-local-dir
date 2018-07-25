@@ -10,16 +10,16 @@ directory. Fails if the directory does not exist on Dropbox.
 EOF
 	   )
 
-dbx-parse-options "$@"
+parse-options "$@"
 shift $((OPTIND-1))
 
-test -z "$1" && dbx-exit-on-missing-args
+test -z "$1" && exit-on-missing-args
 
 DBX_PATH=`dbx-path "$1"` || exit
 dbx-test-dir "$DBX_PATH" || exit
 
-LOCAL_PATH=`dbx-local-path "$DBX_PATH"`
+LOCAL_PATH=`local-path "$DBX_PATH"`
 mkdir -p "$LOCAL_PATH" || \
-    dbx-exit-on-error "Cannot create local directory: $LOCAL_PATH"
+    exit-on-error "Cannot create local directory: $LOCAL_PATH"
 
 echo "$LOCAL_PATH"

@@ -9,7 +9,7 @@ and the optional sub path. Check if the past exists in the Dropbox.
 EOF
 	   )
 
-dbx-parse-options "$@"
+parse-options "$@"
 shift $((OPTIND-1))
 
 DBX_PWD=`dbx-pwd 2>/dev/null` || DBX_PWD=""

@@ -11,18 +11,18 @@ file already exists locally, the case of its name is preserved.
 EOF
 	   )
 
-dbx-parse-options "$@"
+parse-options "$@"
 shift $((OPTIND-1))
 
 P="$1"
-shift && test -n "$P" || dbx-exit-on-missing-args
+shift && test -n "$P" || exit-on-missing-args
 
 shopt -s nocasematch
 
-function dbx-process-match {
+function process-match {
     M=${BASH_REMATCH[0]}
     DBX_FILE="${LINE##$M}"
-    ABS_LOCAL_FILE=`dbx-local-path "$DBX_FILE"`
+    ABS_LOCAL_FILE=`local-path "$DBX_FILE"`
     LOCAL_FILE="${ABS_LOCAL_FILE##$PWD/}"
 }
 
@@ -32,16 +32,16 @@ dbxcli ls -Rl "$DBX_PATH" | \
     while read LINE; do
 	if [[ $LINE =~ ^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+ ]];
 	then
-	    dbx-process-match
+	    process-match
 	    ACTION="creating local directory $LOCAL_FILE"
 	    mkdir -p "$LOCAL_FILE" && \
 		echo "Success $ACTION" || \
-		    dbx-exit-on-error "Failure $ACTION"
+		    exit-on-error "Failure $ACTION"
 	elif [[ $LINE =~ ^[^/]+ ]]; then
-	    dbx-process-match
+	    process-match
 	    ACTION="downloading $LOCAL_FILE"
 	    dbxcli get "$DBX_FILE" "$LOCAL_FILE" && \
 		echo "Success $ACTION" || \
-		    dbx-exit-on-error "Failure $ACTION"
+		    exit-on-error "Failure $ACTION"
 	fi
     done

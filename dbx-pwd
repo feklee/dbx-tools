@@ -2,7 +2,7 @@
 
 source "`dirname $0`/init.sh"
 
-dbx-parse-options "$@"
+parse-options "$@"
 shift $((OPTIND-1))
 
 # Unlikely, but who knows...:
@@ -13,7 +13,7 @@ fi
 
 DBX_PWD=${PWD##$DBX_HOME}
 test "$DBX_PWD" = "$PWD" && \
-    dbx-exit-on-error "Current directory not in \$DBX_HOME"
+    exit-on-error "Current directory not in \$DBX_HOME"
 
 if test -z "$DBX_PWD"; then
     echo "/"

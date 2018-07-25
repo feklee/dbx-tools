@@ -11,25 +11,25 @@ contents recursively.
 EOF
 	   )
 
-dbx-parse-options "$@"
+parse-options "$@"
 shift $((OPTIND-1))
 
 P="$1"
-shift && test -n "$P" || dbx-exit-on-missing-args
+shift && test -n "$P" || exit-on-missing-args
 
 ABSOLUTE_LOCAL_PATH=`realpath -m "$P"`
 
-dbx-test-in-home "$ABSOLUTE_LOCAL_PATH" ||  \
-    dbx-exit-on-error "Path not in \$DBX_HOME"
+test-in-dbx-home "$ABSOLUTE_LOCAL_PATH" ||  \
+    exit-on-error "Path not in \$DBX_HOME"
 
 DBX_PATH=${ABSOLUTE_LOCAL_PATH##$DBX_HOME/}
 
 cd "$DBX_HOME"
 find "$DBX_PATH" -type f | \
     while read FILE; do
-	ABS_LOCAL_FILE=`dbx-local-path "$FILE"`
+	ABS_LOCAL_FILE=`local-path "$FILE"`
 	LOCAL_FILE="${ABS_LOCAL_FILE##$START_PWD/}"
 	dbxcli put "$FILE" "$FILE" && \
 	    echo "Success uploading $LOCAL_FILE" || \
-		dbx-exit-on-error "Failure uploading $LOCAL_FILE"
+		exit-on-error "Failure uploading $LOCAL_FILE"
     done

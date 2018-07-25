@@ -5,10 +5,10 @@ source "`dirname $0`/init.sh"
 NON_OPTION_ARGS=PATH
 DESCRIPTION="Return success if the path exists in the Dropbox and is a directory."
 
-dbx-parse-options "$@"
+parse-options "$@"
 shift $((OPTIND-1))
 
-test -z "$1" && dbx-exit-on-missing-args
+test -z "$1" && exit-on-missing-args
 
 ABSOLUTE_PATH=`realpath -m "/$1"`
 DIRNAME=`dirname "$ABSOLUTE_PATH"`
@@ -16,7 +16,7 @@ DIRNAME=`dirname "$ABSOLUTE_PATH"`
 test "$ABSOLUTE_PATH" = "/" && exit 0
 
 LISTING=`dbxcli ls -l "$DIRNAME"` || \
-    dbx-exit-on-error "Cannot access: $DIRNAME"
+    exit-on-error "Cannot access: $DIRNAME"
 
 shopt -s nocasematch
 
@@ -30,4 +30,4 @@ done <<EOF
 $LISTING
 EOF
 
-dbx-exit-on-error "Not a Dropbox directory: $ABSOLUTE_PATH"
+exit-on-error "Not a Dropbox directory: $ABSOLUTE_PATH"

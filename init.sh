@@ -1,21 +1,21 @@
 set -e
 
-function dbx-test-absolute {
+function test-absolute {
     [[ "${1:0:1}" == / || "${1:0:2}" == ~[/a-z] ]]
 }
 
-function dbx-test-in-home {
+function test-in-dbx-home {
     LOCAL_PATH="$1"
     DBX_PATH=${LOCAL_PATH##$DBX_HOME}
     test "$DBX_PATH" != "$1"
 }
 
-function dbx-exit-on-error {
+function exit-on-error {
     echo "$1" >&2
     exit 1
 }
 
-function dbx-exit-on-help {
+function exit-on-help {
     EXIT_STATUS=${1-0}
 
     echo -n "Usage: `basename $0`"
@@ -35,30 +35,30 @@ function dbx-exit-on-help {
     exit $EXIT_STATUS
 }
 
-function dbx-exit-on-missing-args {
-    dbx-exit-on-help 1
+function exit-on-missing-args {
+    exit-on-help 1
 }
 
-function dbx-exit-on-invalid-option {
-    dbx-exit-on-error "Invalid option: -$1"
+function exit-on-invalid-option {
+    exit-on-error "Invalid option: -$1"
 }
 
-function dbx-parse-options {
+function parse-options {
     KEYS=${!OPTIONS[@]}
     OPTSTRING=":${KEYS// /}"
     ENABLED_OPTIONS=""
     while getopts "$OPTSTRING" OPT; do
-	test $OPT = ? && dbx-exit-on-invalid-option $OPTARG
-	test $OPT = h && dbx-exit-on-help
+	test $OPT = ? && exit-on-invalid-option $OPTARG
+	test $OPT = h && exit-on-help
 	ENABLED_OPTIONS+=$OPT
     done
 }
 
-function dbx-test-option-enabled {
+function test-option-enabled {
     [[ $ENABLED_OPTIONS = *$1* ]]
 }
 
-function dbx-local-path {
+function local-path {
     # Argument is expected to be absolute, enforce that:
     ABSOLUTE_PATH_ON_DBX=`realpath -m "/$1"`
 
@@ -85,22 +85,22 @@ head -n 1`
     echo $LOCAL_PATH
 }
 
-which dbxcli >/dev/null 2>&1 || dbx-exit-on-error "\`dbxcli' not found"
+which dbxcli >/dev/null 2>&1 || exit-on-error "\`dbxcli' not found"
 # `echo' to cancel possible login prompt:
 echo | OUT=`dbxcli version 2>/dev/null` || \
-    dbx-exit-on-error "Cannot get version of \`dbxcli'. Are you logged in?"
+    exit-on-error "Cannot get version of \`dbxcli'. Are you logged in?"
 # Version check using `$OUT' is currently not implemented, see:
 # https:/github.com/dropbox/dbxcli/issues/99
 
 realpath -m /dbx-nothing >/dev/null 2>&1 && \
     realpath -e / >/dev/null 2>&1 || \
-    dbx-exit-on-error "Installed \`realpath' does not support required options \`-m' and \`-e'.
+    exit-on-error "Installed \`realpath' does not support required options \`-m' and \`-e'.
 Consider installing GNU \`realpath'."
 
-test -v DBX_HOME || dbx-exit-on-error "DBX_HOME undefined"
-ABSOLUTE_DBX_HOME=`realpath -e $DBX_HOME` || dbx-exit-on-error "\$DBX_HOME does not exist: $DBX_HOME"
-dbx-test-absolute "$DBX_HOME" || dbx-exit-on-error "\$DBX_HOME is not absolute"
-test -d "$DBX_HOME" || dbx-exit-on-error "\$DBX_HOME is not a directory: $DBX_HOME"
+test -v DBX_HOME || exit-on-error "DBX_HOME undefined"
+ABSOLUTE_DBX_HOME=`realpath -e $DBX_HOME` || exit-on-error "\$DBX_HOME does not exist: $DBX_HOME"
+test-absolute "$DBX_HOME" || exit-on-error "\$DBX_HOME is not absolute"
+test -d "$DBX_HOME" || exit-on-error "\$DBX_HOME is not a directory: $DBX_HOME"
 
 declare -A OPTIONS
 OPTIONS[h]="explain usage"

@@ -25,7 +25,7 @@ test-in-dbx-home "$ABSOLUTE_LOCAL_PATH" ||  \
 DBX_PATH=${ABSOLUTE_LOCAL_PATH##$DBX_HOME/}
 
 cd "$DBX_HOME"
-find "$DBX_PATH" -type f | \
+find -L "$DBX_PATH" -type f | \
     while read FILE; do
 	ABS_LOCAL_FILE=`local-path "$FILE"`
 	LOCAL_FILE="${ABS_LOCAL_FILE##$START_PWD/}"

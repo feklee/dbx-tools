@@ -2,6 +2,9 @@
 
 source "`dirname $0`/init.sh"
 
+#dbx-exit-on-error "TODO, fix: fails with empty path
+# TODO: PREFIX ALL VARS? (test if exported vars can be modded)"
+
 START_PWD="$PWD"
 NON_OPTION_ARGS="PATH"
 
@@ -15,7 +18,7 @@ dbx-parse-options "$@"
 shift $((OPTIND-1))
 
 P="$1"
-shift || dbx-exit-on-missing-args
+shift && test -n "$P" || dbx-exit-on-missing-args
 
 ABSOLUTE_LOCAL_PATH=`realpath -m "$P"`
 

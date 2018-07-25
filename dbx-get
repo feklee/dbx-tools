@@ -15,7 +15,7 @@ dbx-parse-options "$@"
 shift $((OPTIND-1))
 
 P="$1"
-shift || dbx-exit-on-missing-args
+shift && test -n "$P" || dbx-exit-on-missing-args
 
 shopt -s nocasematch
 

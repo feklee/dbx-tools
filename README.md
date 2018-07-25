@@ -16,7 +16,6 @@ release v2.1.1:
 	Spec version: a1d5111
 
 
-
 Sample session
 ==============
 
@@ -61,8 +60,21 @@ Sample session
 		[…]
 		54913be5010b7a9a 6 B   47 seconds ago Greeting.txt
 		[…]
+		
+ 7. Try to upload the same file again:
+ 
+		~/Dropbox$ dbx-put Greeting.txt
+		[skipped]
+  
+    Files that have been previously uploaded are skipped. This
+    functionality compares hashes of file meta data plus file
+    content. If a file is moved, then its meta data changes, and it
+    will be uploaded again on `dbx-put`.
 
- 7. Create and upload a directory:
+	Hashes are stored in `~/.dbx-tools/hashes`. Feel free to delete
+    the directory at any time.
+
+ 8. Create and upload a directory:
 
 		~/Dropbox$ mkdir Greetings
 		~/Dropbox$ echo Hello >Greetings/en
@@ -81,17 +93,17 @@ Sample session
 		Greetings/es
 		[…]
 
- 8. Download a file:
+ 9. Download a file:
  
 	    ~/Dropbox$ dbx-get Goodbye.txt
 		[…]
 
- 9. Download a directory
+10. Download a directory
 
         ~/Dropbox$ dbx-get Goodbyes
 		[…]
  
-10. Delete a file:
+11. Delete a file:
 
 	    ~/Dropbox$ dbx-rm Greetings.txt
 		[…]
@@ -105,7 +117,7 @@ Sample session
 		[local file has been deleted as well]
 		[…]
 
-11. Remove a directory:
+12. Remove a directory:
 
 	    ~/Dropbox$ dbx-rm -r Greetings
 		[…]
@@ -118,8 +130,8 @@ Except where noted otherwise, files are licensed under the WTFPL.
 
 Copyright © 2018 [Felix E. Klee](felix.klee@inka.de)
 
-This work is free. You can redistribute it and/or modify it under the terms of
-the Do What The Fuck You Want To Public License, Version 2, as published by Sam
-Hocevar. See the COPYING file for more details.
+This work is free. You can redistribute it and/or modify it under the
+terms of the Do What The Fuck You Want To Public License, Version 2,
+as published by Sam Hocevar. See the COPYING file for more details.
 
 [1]: https://github.com/dropbox/dbxcli

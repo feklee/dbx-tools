@@ -32,8 +32,7 @@ fi
 
 test -v PATH_IS_DIR && TYPE=Directory || TYPE=File
 echo "$TYPE to remove: $DBX_PATH"
-read -r -p "Proceed with removal? [y/N] " RESPONSE
-test "${RESPONSE,,}" = y || exit-on-cancelled
+ask-to-continue "Proceed with removal?"
 
 test-option-enabled r && O=-f || O=
 dbxcli rm $O "$DBX_PATH" || \

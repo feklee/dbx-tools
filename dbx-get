@@ -18,7 +18,7 @@ function test-skip-file {
 function create-revision-dir {
     REVISION_DIR="$DOT_DIR/revisions"
     mkdir -p "$REVISION_DIR" || \
-	exit-on-error "Cannot create $REVISION_DIR"
+        exit-on-error "Cannot create $REVISION_DIR"
 }
 
 OPTIONS[a]="download all, i.e. never skip previously downloaded files"
@@ -32,7 +32,7 @@ By comparing revisions, only files that have changed are
 downloaded. If a file's meta data has changed, such as its name, it
 will be downloaded as well.
 EOF
-	   )
+           )
 parse-options "$@"
 shift $((OPTIND-1))
 P="$1"
@@ -53,25 +53,25 @@ DBX_PATH=`dbx-path "$P"`
 dbxcli ls -Rl "$DBX_PATH" | \
     tail -n +2 | \
     while read LINE; do
-	if [[ $LINE =~ ^(-)[[:blank:]]+-[[:blank:]]+-[[:blank:]]+(.*) ]];
-	then
-	    process-match
-	    if ! test -d "$LOCAL_FILE"; then
-		ACTION="creating local directory $LOCAL_FILE"
-		mkdir -p "$LOCAL_FILE" && \
-		    echo "Success $ACTION" || \
-			exit-on-error "Failure $ACTION"
-	    fi
-	elif [[ $LINE =~ ^([[:alnum:]]+)[[:blank:]]+[^/]+(.*) ]]; then
-	    process-match
-	    if test-skip-file; then
-		echo "Skipping previously downloaded $LOCAL_FILE"
-	    else
-		ACTION="downloading $LOCAL_FILE"
-		dbxcli get "$DBX_FILE" "$LOCAL_FILE" || \
-		    exit-on-error "Failure $ACTION"
-		echo "Success $ACTION"
-		store-revision
-	    fi
-	fi
+        if [[ $LINE =~ ^(-)[[:blank:]]+-[[:blank:]]+-[[:blank:]]+(.*) ]];
+        then
+            process-match
+            if ! test -d "$LOCAL_FILE"; then
+                ACTION="creating local directory $LOCAL_FILE"
+                mkdir -p "$LOCAL_FILE" && \
+                    echo "Success $ACTION" || \
+                        exit-on-error "Failure $ACTION"
+            fi
+        elif [[ $LINE =~ ^([[:alnum:]]+)[[:blank:]]+[^/]+(.*) ]]; then
+            process-match
+            if test-skip-file; then
+                echo "Skipping previously downloaded $LOCAL_FILE"
+            else
+                ACTION="downloading $LOCAL_FILE"
+                dbxcli get "$DBX_FILE" "$LOCAL_FILE" || \
+                    exit-on-error "Failure $ACTION"
+                echo "Success $ACTION"
+                store-revision
+            fi
+        fi
     done

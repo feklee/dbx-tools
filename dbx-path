@@ -7,7 +7,7 @@ DESCRIPTION=$(cat <<EOF
 Assemble a path on Dropbox from the current Dropbox working directory
 and the optional sub path. Check if the past exists in the Dropbox.
 EOF
-	   )
+           )
 
 parse-options "$@"
 shift $((OPTIND-1))

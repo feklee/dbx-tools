@@ -8,7 +8,7 @@ If not existing, creates a local directory corresponding to the
 path on Dropbox, relative to the current location. Outputs that
 directory. Fails if the directory does not exist on Dropbox.
 EOF
-	   )
+           )
 
 parse-options "$@"
 shift $((OPTIND-1))

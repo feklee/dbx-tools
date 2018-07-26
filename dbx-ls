@@ -11,7 +11,7 @@ DESCRIPTION=$(cat <<EOF
 List information about the current Dropbox directory, or if
 specified, about PATH.
 EOF
-	   )
+           )
 
 parse-options "$@"
 shift $((OPTIND-1))
@@ -24,13 +24,13 @@ function relative-path-from-match {
     ISDIR=$2
     P="${LINE##$MATCH}"
     if test "${P,,}" == "${DBX_PATH,,}"; then
-	# Path is the one that was requested
-	test "$ISDIR" = yes && echo . || echo "$REQUESTED_PATH"
-	exit
+        # Path is the one that was requested
+        test "$ISDIR" = yes && echo . || echo "$REQUESTED_PATH"
+        exit
     fi
     if test "$DBX_PATH" != /; then
-	C=${#DBX_PATH}
-	P="${P:$C}"
+        C=${#DBX_PATH}
+        P="${P:$C}"
     fi
     P="${P:1}"
     test "$P" = / && P=""
@@ -45,7 +45,7 @@ function print-path-line {
     test -v LONG && echo -n "$MATCH"
     echo -n "$RELPATH"
     test "$RELPATH" != . && test "$ISDIR" = yes && test ! -v LONG && \
-	echo -n /
+        echo -n /
     echo
 }
 
@@ -56,15 +56,15 @@ test-option-enabled R && O=-R
 
 dbxcli ls -l $O "$DBX_PATH" | \
     while read LINE; do
-	if [[ $LINE =~ ^Revision ]]; then
-	    # Heading
-	    test -v LONG && echo "$LINE"
-	elif [[ $LINE =~ ^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+ ]];
-	then
-	    # Directory
-	    print-path-line "$LINE" "${BASH_REMATCH[0]}" yes
-	elif [[ $LINE =~ ^[^/]+ ]]; then
-	    # Regular file
-	    print-path-line "$LINE" "${BASH_REMATCH[0]}"
-	fi
+        if [[ $LINE =~ ^Revision ]]; then
+            # Heading
+            test -v LONG && echo "$LINE"
+        elif [[ $LINE =~ ^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+ ]];
+        then
+            # Directory
+            print-path-line "$LINE" "${BASH_REMATCH[0]}" yes
+        elif [[ $LINE =~ ^[^/]+ ]]; then
+            # Regular file
+            print-path-line "$LINE" "${BASH_REMATCH[0]}"
+        fi
     done

@@ -10,13 +10,13 @@ function store-hash {
 
 function compute-md5 {
     {
-	stat "$FILE" && cat "$FILE"
+        stat "$FILE" && cat "$FILE"
     } | b2sum
 }
 
 function compute-hash {
     MD5SUM=`compute-md5` || \
-	exit-on-error "Cannot compute hash for $FILE"
+        exit-on-error "Cannot compute hash for $FILE"
     HASH=${MD5SUM%% *}
 }
 
@@ -32,7 +32,7 @@ function test-skip-file {
 function create-hash-dir {
     HASH_DIR="$DOT_DIR/hashes"
     mkdir -p "$HASH_DIR" || \
-	exit-on-error "Cannot create $HASH_DIR"
+        exit-on-error "Cannot create $HASH_DIR"
 }
 
 START_PWD="$PWD"
@@ -47,7 +47,7 @@ By comparing hashes, only files that have changed are uploaded. If a
 file's meta data has changed, such as its name, it will be uploaded as
 well.
 EOF
-	   )
+           )
 parse-options "$@"
 shift $((OPTIND-1))
 P="$1"
@@ -65,15 +65,15 @@ DBX_PATH=${ABSOLUTE_LOCAL_PATH##$DBX_HOME/}
 cd "$DBX_HOME"
 find -L "$DBX_PATH" -type f | \
     while read FILE; do
-	ABS_LOCAL_FILE=`local-path "$FILE"`
-	LOCAL_FILE="${ABS_LOCAL_FILE##$START_PWD/}"
-	compute-hash
-	if test-skip-file; then
-	    echo "Skipping previously uploaded $LOCAL_FILE"
-	else
-	    dbxcli put "$FILE" "$FILE" || \
-		exit-on-error "Failure uploading $LOCAL_FILE"
-	    echo "Success uploading $LOCAL_FILE"
-	    store-hash
-	fi
+        ABS_LOCAL_FILE=`local-path "$FILE"`
+        LOCAL_FILE="${ABS_LOCAL_FILE##$START_PWD/}"
+        compute-hash
+        if test-skip-file; then
+            echo "Skipping previously uploaded $LOCAL_FILE"
+        else
+            dbxcli put "$FILE" "$FILE" || \
+                exit-on-error "Failure uploading $LOCAL_FILE"
+            echo "Success uploading $LOCAL_FILE"
+            store-hash
+        fi
     done

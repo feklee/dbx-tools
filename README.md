@@ -11,9 +11,9 @@ responsibly, especially when manipulating lots of files at once.
 dbx-tools depends on [dbxcli][1]. It was tested with dbxcli Git
 release v2.1.1:
 
-	dbxcli version: 0.1.0
-	SDK version: 4.5.0
-	Spec version: a1d5111
+    dbxcli version: 0.1.0
+    SDK version: 4.5.0
+    Spec version: a1d5111
 
 
 Sample session
@@ -22,12 +22,12 @@ Sample session
  1. Make sure that `dbxcli` is available and that you are logged into
     Dropbox:
 
-		~$ dbxcli account
+        ~$ dbxcli account
 
  2. Create a path for your Dropbox and tell dbx-tools about it.
 
         ~$ mkdir Dropbox
-		~$ export DBX_HOME="$HOME/Dropbox"
+        ~$ export DBX_HOME="$HOME/Dropbox"
 
  3. Enable `dbx-cd`:
 
@@ -36,104 +36,104 @@ Sample session
  4. To get help on any command, use the `-h` option:
 
         ~$ dbx-ls -h
-		Usage: dbx-ls […]
+        Usage: dbx-ls […]
 
  5. Navigate your Dropbox, noting that local paths are created if
     necessary:
 
-		~$ cd Dropbox
-		~/Dropbox$ dbx-ls
-		Pictures/
-		Documents/
-		Info.txt
-		~/Dropbox$ dbx-cd Documents
-		~/Dropbox/Documents$ dbx-pwd
-		/Documents
+        ~$ cd Dropbox
+        ~/Dropbox$ dbx-ls
+        Pictures/
+        Documents/
+        Info.txt
+        ~/Dropbox$ dbx-cd Documents
+        ~/Dropbox/Documents$ dbx-pwd
+        /Documents
 
  6. Create and upload a file:
 
-		~/Dropbox$ echo Hello >Greeting.txt
-		~/Dropbox$ dbx-put Greeting.txt
-		[…]
-		~/Dropbox$ dbx-ls -l
-		Revision         Size  Last modified  Path
-		[…]
-		54913be5010b7a9a 6 B   47 seconds ago Greeting.txt
-		[…]
+        ~/Dropbox$ echo Hello >Greeting.txt
+        ~/Dropbox$ dbx-put Greeting.txt
+        […]
+        ~/Dropbox$ dbx-ls -l
+        Revision         Size  Last modified  Path
+        […]
+        54913be5010b7a9a 6 B   47 seconds ago Greeting.txt
+        […]
  
  7. Try to upload the same file again:
  
-		~/Dropbox$ dbx-put Greeting.txt
-		[skipped]
+        ~/Dropbox$ dbx-put Greeting.txt
+        [skipped]
   
     Files that have been previously uploaded are skipped. This
     functionality compares hashes of file meta data plus file
     content. If a file is moved, then its meta data changes, and it
     will be uploaded again on `dbx-put`.
 
-	Hashes are stored in `~/.dbx-tools/hashes`. Feel free to delete
+    Hashes are stored in `~/.dbx-tools/hashes`. Feel free to delete
     the directory at any time.
 
  8. Create and upload a directory:
 
-		~/Dropbox$ mkdir Greetings
-		~/Dropbox$ echo Hello >Greetings/en
-		~/Dropbox$ echo Hallo >Greetings/de
-		~/Dropbox$ echo Salut >Greetings/fr
-		~/Dropbox$ echo Hola >Greetings/es
-		~/Dropbox$ dbx-put Greetings
-		[…]
-		~/Dropbox$ dbx-ls -R
-		[…]
-		Greetings/
-		[…]
-		Greetings/en
-		Greetings/de
-		Greetings/fr
-		Greetings/es
-		[…]
+        ~/Dropbox$ mkdir Greetings
+        ~/Dropbox$ echo Hello >Greetings/en
+        ~/Dropbox$ echo Hallo >Greetings/de
+        ~/Dropbox$ echo Salut >Greetings/fr
+        ~/Dropbox$ echo Hola >Greetings/es
+        ~/Dropbox$ dbx-put Greetings
+        […]
+        ~/Dropbox$ dbx-ls -R
+        […]
+        Greetings/
+        […]
+        Greetings/en
+        Greetings/de
+        Greetings/fr
+        Greetings/es
+        […]
 
  9. Download a file:
  
-	    ~/Dropbox$ dbx-get Goodbye.txt
-		[…]
+        ~/Dropbox$ dbx-get Goodbye.txt
+        […]
 
 10. Try to upload the same file again:
  
-		~/Dropbox$ dbx-get Goodbye.txt
-		[skipped]
-		
-	Files that have been previously downloaded are skipped. This
+        ~/Dropbox$ dbx-get Goodbye.txt
+        [skipped]
+        
+    Files that have been previously downloaded are skipped. This
     functionality compares revsions of files. Note that if a file is
     moved or renamed, then its revision changes, i.e. it will be
     downloaded again.
 
-	Revisions are stored in `~/.dbx-tools/revisions`. Feel free to
+    Revisions are stored in `~/.dbx-tools/revisions`. Feel free to
     delete the directory at any time.
 
 11. Download a directory
 
         ~/Dropbox$ dbx-get Goodbyes
-		[…]
+        […]
  
 12. Delete a file:
 
-	    ~/Dropbox$ dbx-rm Greetings.txt
-		[…]
-		~/Dropbox$ dbx-ls -l
-		Revision         Size  Last modified  Path
-		[…]
-		[remote file is missing]
-		[…]
-		~/Dropbox$ ls -l
-		[…]
-		[local file has been deleted as well]
-		[…]
+        ~/Dropbox$ dbx-rm Greetings.txt
+        […]
+        ~/Dropbox$ dbx-ls -l
+        Revision         Size  Last modified  Path
+        […]
+        [remote file is missing]
+        […]
+        ~/Dropbox$ ls -l
+        […]
+        [local file has been deleted as well]
+        […]
 
 13. Remove a directory:
 
-	    ~/Dropbox$ dbx-rm -r Greetings
-		[…]
+        ~/Dropbox$ dbx-rm -r Greetings
+        […]
 
 
 Coding conventions

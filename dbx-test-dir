@@ -22,9 +22,9 @@ shopt -s nocasematch
 
 while read LINE; do
     if [[ $LINE =~ ^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+ ]]; then
-	M=${BASH_REMATCH[0]}
-	P=${LINE##$M}
-	test "${P,,}" = "${ABSOLUTE_PATH,,}" && exit 0
+        M=${BASH_REMATCH[0]}
+        P=${LINE##$M}
+        test "${P,,}" = "${ABSOLUTE_PATH,,}" && exit 0
     fi
 done <<EOF
 $LISTING

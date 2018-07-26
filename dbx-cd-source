@@ -3,8 +3,8 @@
 function dbx-cd {
     test -z "$1" && RELATIVE_PATH="/" || RELATIVE_PATH="$1"
     OUT=`dbx-make-local-dir "$RELATIVE_PATH"` && \
-	cd "$OUT" || \
-	    echo "$OUT" >&2
+        cd "$OUT" || \
+            echo "$OUT" >&2
 }
 
 test "$0" = "$BASH_SOURCE" && \

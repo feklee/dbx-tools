@@ -30,7 +30,7 @@ function exit-on-help {
     test -z "$KEYS" && exit $EXIT_STATUS
     echo
     for KEY in $KEYS; do
-	echo -e "  -$KEY\t${OPTIONS[$KEY]}"
+        echo -e "  -$KEY\t${OPTIONS[$KEY]}"
     done
     exit $EXIT_STATUS
 }
@@ -52,9 +52,9 @@ function parse-options {
     OPTSTRING=":${KEYS// /}"
     ENABLED_OPTIONS=""
     while getopts "$OPTSTRING" OPT; do
-	test $OPT = ? && exit-on-invalid-option $OPTARG
-	test $OPT = h && exit-on-help
-	ENABLED_OPTIONS+=$OPT
+        test $OPT = ? && exit-on-invalid-option $OPTARG
+        test $OPT = h && exit-on-help
+        ENABLED_OPTIONS+=$OPT
     done
 }
 
@@ -73,16 +73,16 @@ function local-path {
     DBX_PATH="${ABSOLUTE_PATH_ON_DBX:1}"
     cd "$DBX_HOME" || return 1
     while test -n "$DBX_PATH"; do
-	S=${DBX_PATH%%/*}
-	test "$S" != . && DBX_SUB_DIR="$S" || \
-		DBX_SUB_DIR="$DBX_PATH"
-	LOCAL_FILE=`find -iname "$DBX_SUB_DIR" -maxdepth 1 | \
+        S=${DBX_PATH%%/*}
+        test "$S" != . && DBX_SUB_DIR="$S" || \
+                DBX_SUB_DIR="$DBX_PATH"
+        LOCAL_FILE=`find -iname "$DBX_SUB_DIR" -maxdepth 1 | \
 head -n 1`
-	test -z "$LOCAL_FILE" && break
-	test -f "$LOCAL_FILE" && { DBX_PATH="$LOCAL_FILE"; break; }
-	cd "$LOCAL_FILE" || return 1
-	DBX_PATH=${DBX_PATH##$DBX_SUB_DIR}
-	DBX_PATH=${DBX_PATH##/}
+        test -z "$LOCAL_FILE" && break
+        test -f "$LOCAL_FILE" && { DBX_PATH="$LOCAL_FILE"; break; }
+        cd "$LOCAL_FILE" || return 1
+        DBX_PATH=${DBX_PATH##$DBX_SUB_DIR}
+        DBX_PATH=${DBX_PATH##/}
     done
 
     LOCAL_PATH=`realpath -m "$PWD/$DBX_PATH"`

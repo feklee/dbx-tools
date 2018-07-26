@@ -8,7 +8,7 @@ DESCRIPTION=$(cat <<EOF
 Remove PATH from the Dropbox. If PATH is a directory, remove its
 contents recursively.
 EOF
-	   )
+           )
 
 parse-options "$@"
 shift $((OPTIND-1))
@@ -27,7 +27,7 @@ function test-is-non-empty-directory {
 
 if ! test-option-enabled r; then
     test-is-non-empty-directory && \
-	exit-on-error "Directory is not empty: $DBX_PATH"
+        exit-on-error "Directory is not empty: $DBX_PATH"
 fi
 
 test -v PATH_IS_DIR && TYPE=Directory || TYPE=File
@@ -43,5 +43,5 @@ LOCAL_PATH=`local-path "$DBX_PATH"`
 if test -a "$LOCAL_PATH"; then
     test-option-enabled r && O=-r || O=
     rm $O "$LOCAL_PATH" || \
-	exit-on-error "Could not remove locally: $LOCAL_PATH"
+        exit-on-error "Could not remove locally: $LOCAL_PATH"
 fi

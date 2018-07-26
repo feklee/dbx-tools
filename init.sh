@@ -89,7 +89,25 @@ head -n 1`
     echo $LOCAL_PATH
 }
 
+function create-revision-dir {
+    REVISION_DIR="$DOT_DIR/revisions"
+    mkdir -p "$REVISION_DIR" || \
+        exit-on-error "Cannot create $REVISION_DIR"
+}
+
+function create-hash-dir {
+    HASH_DIR="$DOT_DIR/hashes"
+    mkdir -p "$HASH_DIR" || \
+        exit-on-error "Cannot create $HASH_DIR"
+}
+
+function ask-to-continue {
+    read -r -p "$1 [y/N] " RESPONSE
+    test "${RESPONSE,,}" = y || exit-on-cancelled
+}
+    
 which dbxcli >/dev/null 2>&1 || exit-on-error "\`dbxcli' not found"
+
 # `echo' to cancel possible login prompt:
 echo | OUT=`dbxcli version 2>/dev/null` || \
     exit-on-error "Cannot get version of \`dbxcli'. Are you logged in?"
@@ -107,6 +125,8 @@ test-absolute "$DBX_HOME" || exit-on-error "\$DBX_HOME is not absolute"
 test -d "$DBX_HOME" || exit-on-error "\$DBX_HOME is not a directory: $DBX_HOME"
 
 DOT_DIR="$HOME/.dbx-tools"
+create-revision-dir
+create-hash-dir
 
 declare -A OPTIONS
 OPTIONS[h]="explain usage"

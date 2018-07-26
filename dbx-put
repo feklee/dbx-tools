@@ -24,19 +24,28 @@ function test-hash-exists {
     test -f "$HASH_DIR/$HASH"
 }
 
+function test-skip-file {
+    test-option-enabled a && return 1 
+    test-hash-exists
+}
+
 function create-hash-dir {
     HASH_DIR="$DOT_DIR/hashes"
     mkdir -p "$HASH_DIR" || \
 	exit-on-error "Cannot create $HASH_DIR"
 }
 
-# TODO: add option -a to upload all
-
 START_PWD="$PWD"
+
+OPTIONS[a]="download all, i.e. never skip previously downloaded files"
 NON_OPTION_ARGS="PATH"
 DESCRIPTION=$(cat <<EOF
 Upload PATH to the Dropbox. If PATH is a directory, upload its
 contents recursively.
+
+By comparing hashes, only files that have changed are uploaded. If a
+file's meta data has changed, such as its name, it will be uploaded as
+well.
 EOF
 	   )
 parse-options "$@"
@@ -59,7 +68,7 @@ find -L "$DBX_PATH" -type f | \
 	ABS_LOCAL_FILE=`local-path "$FILE"`
 	LOCAL_FILE="${ABS_LOCAL_FILE##$START_PWD/}"
 	compute-hash
-	if test-hash-exists; then
+	if test-skip-file; then
 	    echo "Skipping previously uploaded $LOCAL_FILE"
 	else
 	    dbxcli put "$FILE" "$FILE" || \

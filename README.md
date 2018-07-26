@@ -71,9 +71,6 @@ Sample session
     content. If a file is moved, then its meta data changes, and it
     will be uploaded again on `dbx-put`.
 
-    Hashes are stored in `~/.dbx-tools/hashes`. Feel free to delete
-    the directory at any time.
-
  8. Create and upload a directory:
 
         ~/Dropbox$ mkdir Greetings
@@ -108,9 +105,6 @@ Sample session
     moved or renamed, then its revision changes, i.e. it will be
     downloaded again.
 
-    Revisions are stored in `~/.dbx-tools/revisions`. Feel free to
-    delete the directory at any time.
-
 11. Download a directory
 
         ~/Dropbox$ dbx-get Goodbyes
@@ -134,6 +128,15 @@ Sample session
 
         ~/Dropbox$ dbx-rm -r Greetings
         […]
+
+14. Clear hashes and revisions generated when uploading respectively
+    downloading files:
+    
+        ~/Dropbox$ dbx-clear-cache
+        […]
+        
+    Clearing the cache should rarely be necessary. It takes up little
+    space, and keeping it prevents unnecessary uploads and downloads.
 
 
 Coding conventions

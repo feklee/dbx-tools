@@ -1,0 +1,22 @@
+#!/bin/bash
+
+source "`dirname $0`/init.sh"
+
+NON_OPTION_ARGS="PATH"
+DESCRIPTION=$(cat <<EOF
+Removes hashes and revisions of already uploaded respectively
+downloaded files.
+EOF
+           )
+parse-options "$@"
+shift $((OPTIND-1))
+
+echo "Removing files in:"
+echo "$REVISION_DIR"
+echo "$HASH_DIR"
+
+ask-to-continue "Proceed?"
+
+rm -f "$REVISION_DIR"/* && \
+    rm -f "$HASH_DIR"/* || \
+        exit-on-error "Failure clearing cache"

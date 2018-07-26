@@ -29,12 +29,6 @@ function test-skip-file {
     test-hash-exists
 }
 
-function create-hash-dir {
-    HASH_DIR="$DOT_DIR/hashes"
-    mkdir -p "$HASH_DIR" || \
-        exit-on-error "Cannot create $HASH_DIR"
-}
-
 START_PWD="$PWD"
 
 OPTIONS[a]="download all, i.e. never skip previously downloaded files"
@@ -52,8 +46,6 @@ parse-options "$@"
 shift $((OPTIND-1))
 P="$1"
 shift && test -n "$P" || exit-on-missing-args
-
-create-hash-dir
 
 ABSOLUTE_LOCAL_PATH=`realpath -m "$P"`
 

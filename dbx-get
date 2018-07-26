@@ -15,12 +15,6 @@ function test-skip-file {
     test-revision-exists
 }
 
-function create-revision-dir {
-    REVISION_DIR="$DOT_DIR/revisions"
-    mkdir -p "$REVISION_DIR" || \
-        exit-on-error "Cannot create $REVISION_DIR"
-}
-
 OPTIONS[a]="download all, i.e. never skip previously downloaded files"
 NON_OPTION_ARGS="PATH"
 DESCRIPTION=$(cat <<EOF
@@ -37,8 +31,6 @@ parse-options "$@"
 shift $((OPTIND-1))
 P="$1"
 shift && test -n "$P" || exit-on-missing-args
-
-create-revision-dir
 
 shopt -s nocasematch
 

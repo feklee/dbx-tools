@@ -60,7 +60,7 @@ Sample session
 		[…]
 		54913be5010b7a9a 6 B   47 seconds ago Greeting.txt
 		[…]
-		
+ 
  7. Try to upload the same file again:
  
 		~/Dropbox$ dbx-put Greeting.txt
@@ -98,12 +98,25 @@ Sample session
 	    ~/Dropbox$ dbx-get Goodbye.txt
 		[…]
 
-10. Download a directory
+10. Try to upload the same file again:
+ 
+		~/Dropbox$ dbx-get Goodbye.txt
+		[skipped]
+		
+	Files that have been previously downloaded are skipped. This
+    functionality compares revsions of files. Note that if a file is
+    moved or renamed, then its revision changes, i.e. it will be
+    downloaded again.
+
+	Revisions are stored in `~/.dbx-tools/revisions`. Feel free to
+    delete the directory at any time.
+
+11. Download a directory
 
         ~/Dropbox$ dbx-get Goodbyes
 		[…]
  
-11. Delete a file:
+12. Delete a file:
 
 	    ~/Dropbox$ dbx-rm Greetings.txt
 		[…]
@@ -117,7 +130,7 @@ Sample session
 		[local file has been deleted as well]
 		[…]
 
-12. Remove a directory:
+13. Remove a directory:
 
 	    ~/Dropbox$ dbx-rm -r Greetings
 		[…]

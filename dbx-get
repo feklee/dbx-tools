@@ -2,26 +2,43 @@
 
 source "`dirname $0`/init.sh"
 
-NON_OPTION_ARGS="PATH"
+function store-revision {
+    touch "$REVISION_DIR/$REVISION"
+}
 
+function test-revision-exists {
+    test -f "$REVISION_DIR/$REVISION"
+}
+
+function create-revision-dir {
+    REVISION_DIR="$DOT_DIR/revisions"
+    mkdir -p "$REVISION_DIR" || \
+	exit-on-error "Cannot create $REVISION_DIR"
+}
+
+NON_OPTION_ARGS="PATH"
 DESCRIPTION=$(cat <<EOF
 Download PATH from the Dropbox. If PATH is a directory, download its
 contents recursively. Dropbox is case insensitive to file names. If a
 file already exists locally, the case of its name is preserved.
+
+By comparing revisions, only files that have changed are
+downloaded. If a file's meta data has changed, such as its name, it
+will be downloaded as well.
 EOF
 	   )
-
 parse-options "$@"
 shift $((OPTIND-1))
-
 P="$1"
 shift && test -n "$P" || exit-on-missing-args
+
+create-revision-dir
 
 shopt -s nocasematch
 
 function process-match {
-    M=${BASH_REMATCH[0]}
-    DBX_FILE="${LINE##$M}"
+    REVISION="${BASH_REMATCH[1]}"
+    DBX_FILE="${BASH_REMATCH[2]}"
     ABS_LOCAL_FILE=`local-path "$DBX_FILE"`
     LOCAL_FILE="${ABS_LOCAL_FILE##$PWD/}"
 }
@@ -30,18 +47,25 @@ DBX_PATH=`dbx-path "$P"`
 dbxcli ls -Rl "$DBX_PATH" | \
     tail -n +2 | \
     while read LINE; do
-	if [[ $LINE =~ ^-[[:blank:]]+-[[:blank:]]+-[[:blank:]]+ ]];
+	if [[ $LINE =~ ^(-)[[:blank:]]+-[[:blank:]]+-[[:blank:]]+(.*) ]];
 	then
 	    process-match
-	    ACTION="creating local directory $LOCAL_FILE"
-	    mkdir -p "$LOCAL_FILE" && \
-		echo "Success $ACTION" || \
-		    exit-on-error "Failure $ACTION"
-	elif [[ $LINE =~ ^[^/]+ ]]; then
+	    if ! test -d "$LOCAL_FILE"; then
+		ACTION="creating local directory $LOCAL_FILE"
+		mkdir -p "$LOCAL_FILE" && \
+		    echo "Success $ACTION" || \
+			exit-on-error "Failure $ACTION"
+	    fi
+	elif [[ $LINE =~ ^([[:alnum:]]+)[[:blank:]]+[^/]+(.*) ]]; then
 	    process-match
-	    ACTION="downloading $LOCAL_FILE"
-	    dbxcli get "$DBX_FILE" "$LOCAL_FILE" && \
-		echo "Success $ACTION" || \
+	    if test-revision-exists; then
+		echo "Skipping previously downloaded $LOCAL_FILE"
+	    else
+		ACTION="downloading $LOCAL_FILE"
+		dbxcli get "$DBX_FILE" "$LOCAL_FILE" || \
 		    exit-on-error "Failure $ACTION"
+		echo "Success $ACTION"
+		store-revision
+	    fi
 	fi
     done

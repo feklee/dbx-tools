@@ -41,7 +41,7 @@ Sample session
         ~$ dbx-ls -h
         Usage: dbx-ls […]
 
- 5. Navigate your Dropbox, noting that local paths are created if
+ 5. Navigate your Dropbox, noticing that local paths are created if
     necessary:
 
         ~$ cd Dropbox
@@ -98,7 +98,7 @@ Sample session
         ~/Dropbox$ dbx-get Goodbye.txt
         […]
 
-10. Try to upload the same file again:
+10. Try to download the same file again:
  
         ~/Dropbox$ dbx-get Goodbye.txt
         [skipped]

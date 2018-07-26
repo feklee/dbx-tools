@@ -136,6 +136,18 @@ Sample session
 		[…]
 
 
+Coding conventions
+==================
+
+  * `$VARIABLE_NAME`
+  
+  * `function-name`
+  
+  * Maximum line length: 70
+  
+  * Indentation depth: 4 spaces
+
+
 License
 =======
 

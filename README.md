@@ -15,6 +15,9 @@ release v2.1.1:
     SDK version: 4.5.0
     Spec version: a1d5111
 
+dbx-tools was originally written for interfacing with Dropbox from
+within the [Termux][2] terminal emulator for Android.
+
 
 Sample session
 ==============
@@ -163,3 +166,4 @@ terms of the Do What The Fuck You Want To Public License, Version 2,
 as published by Sam Hocevar. See the COPYING file for more details.
 
 [1]: https://github.com/dropbox/dbxcli
+[2]: https://termux.com

@@ -4,22 +4,6 @@ source "`dirname $0`/init.sh"
 
 set -o pipefail
 
-function store-hash {
-    touch "$HASH_DIR/$HASH"
-}
-
-function compute-md5 {
-    {
-        stat "$FILE" && cat "$FILE"
-    } | b2sum
-}
-
-function compute-hash {
-    MD5SUM=`compute-md5` || \
-        exit-on-error "Cannot compute hash for $FILE"
-    HASH=${MD5SUM%% *}
-}
-
 function test-hash-exists {
     test -f "$HASH_DIR/$HASH"
 }
@@ -56,14 +40,14 @@ DBX_PATH=${ABSOLUTE_LOCAL_PATH##$DBX_HOME/}
 
 cd "$DBX_HOME"
 find -L "$DBX_PATH" -type f | \
-    while read FILE; do
-        ABS_LOCAL_FILE=`local-path "$FILE"`
+    while read DBX_FILE; do
+        ABS_LOCAL_FILE=`local-path "$DBX_FILE"`
         LOCAL_FILE="${ABS_LOCAL_FILE##$START_PWD/}"
-        compute-hash
+        compute-hash "$ABS_LOCAL_FILE"
         if test-skip-file; then
             echo "Skipping previously uploaded $LOCAL_FILE"
         else
-            dbxcli put "$FILE" "$FILE" || \
+            dbxcli put "$DBX_FILE" "$DBX_FILE" || \
                 exit-on-error "Failure uploading $LOCAL_FILE"
             echo "Success uploading $LOCAL_FILE"
             store-hash

@@ -64,6 +64,8 @@ dbxcli ls -Rl "$DBX_PATH" | \
                     exit-on-error "Failure $ACTION"
                 echo "Success $ACTION"
                 store-revision
+                compute-hash "$ABS_LOCAL_FILE"
+                store-hash # prevents file from being uploaded on put
             fi
         fi
     done

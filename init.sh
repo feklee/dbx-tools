@@ -105,7 +105,25 @@ function ask-to-continue {
     read -r -p "$1 [y/N] " RESPONSE
     test "${RESPONSE,,}" = y || exit-on-cancelled
 }
-    
+
+function compute-b2sum {
+    ABS_LOCAL_FILE="$1"
+    {
+        stat "$ABS_LOCAL_FILE" && cat "$ABS_LOCAL_FILE"
+    } | b2sum
+}
+
+function compute-hash {
+    ABS_LOCAL_FILE="$1"
+    MD5SUM=`compute-b2sum "$ABS_LOCAL_FILE"` || \
+        exit-on-error "Cannot compute hash for $ABS_LOCAL_FILE"
+    HASH=${MD5SUM%% *}
+}
+
+function store-hash {
+    touch "$HASH_DIR/$HASH"
+}
+
 which dbxcli >/dev/null 2>&1 || exit-on-error "\`dbxcli' not found"
 
 # `echo' to cancel possible login prompt:

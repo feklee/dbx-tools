@@ -11,6 +11,7 @@ function test-revision-exists {
 }
 
 function test-skip-file {
+    ! test -f "$ABS_LOCAL_FILE" && return 1
     test-option-enabled a && return 1 
     test-revision-exists
 }
@@ -65,7 +66,8 @@ dbxcli ls -Rl "$DBX_PATH" | \
                 echo "Success $ACTION"
                 store-revision
                 compute-hash "$ABS_LOCAL_FILE"
-                store-hash # prevents file from being uploaded on put
+                store-hash # prevents file from being uploaded
+                           # unnecessarily
             fi
         fi
     done

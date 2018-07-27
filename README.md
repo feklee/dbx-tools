@@ -141,6 +141,12 @@ Sample session
     Clearing the cache should rarely be necessary. It takes up little
     space, and keeping it prevents unnecessary uploads and downloads.
 
+15. When moving around with `dbx-cd`, lots of unused empty directories
+    may be created. To clean up empty directories in `$DBX_HOME`, use:
+
+        ~/Dropbox$ dbx-clean
+        […]
+
 
 Coding conventions
 ==================

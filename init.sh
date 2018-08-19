@@ -76,7 +76,7 @@ function local-path {
         S=${DBX_PATH%%/*}
         test "$S" != . && DBX_SUB_DIR="$S" || \
                 DBX_SUB_DIR="$DBX_PATH"
-        LOCAL_FILE=`find -iname "$DBX_SUB_DIR" -maxdepth 1 | \
+        LOCAL_FILE=`find -maxdepth 1 -iname "$DBX_SUB_DIR" | \
 head -n 1`
         test -z "$LOCAL_FILE" && break
         test -f "$LOCAL_FILE" && { DBX_PATH="$LOCAL_FILE"; break; }

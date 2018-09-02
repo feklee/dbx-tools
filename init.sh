@@ -124,6 +124,10 @@ function store-hash {
     touch "$HASH_DIR/$HASH"
 }
 
+function test-hash-exists {
+    test -f "$HASH_DIR/$HASH"
+}
+
 which dbxcli >/dev/null 2>&1 || exit-on-error "\`dbxcli' not found"
 
 # `echo' to cancel possible login prompt:

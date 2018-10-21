@@ -8,15 +8,16 @@ In a production environment, use one of the *releases* tagged in
 Git. And, keep in mind: *This is experimental software!* Use it
 responsibly, especially when manipulating lots of files at once.
 
-dbx-tools depends on [dbxcli][1]. It was tested with dbxcli Git
-release v2.1.1:
+dbx-tools depends on [dbxcli][1]. It was tested with dbxcli [Git
+release v2.1.1][2]. Note that the version number in the output of
+`dbxcli version` does *not* match that of the Git release:
 
     dbxcli version: 0.1.0
     SDK version: 4.5.0
     Spec version: a1d5111
 
 dbx-tools was originally written for interfacing with Dropbox from
-within the [Termux][2] terminal emulator for Android.
+within the [Termux][3] terminal emulator for Android.
 
 
 Sample session
@@ -172,4 +173,5 @@ terms of the Do What The Fuck You Want To Public License, Version 2,
 as published by Sam Hocevar. See the COPYING file for more details.
 
 [1]: https://github.com/dropbox/dbxcli
-[2]: https://termux.com
+[2]: https://github.com/dropbox/dbxcli/releases/tag/v2.1.1
+[3]: https://termux.com
